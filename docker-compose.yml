@@ -1,0 +1,38 @@
+services:
+  postgresql:
+    image: postgres:17
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: semestrovka
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+
+    networks:
+      - backend
+
+  liquibase-migrations:
+    container_name: semestrovka-migrations
+    image: liquibase/liquibase:4.29
+    depends_on:
+      - postgresql
+    command:
+      - --searchPath=/changesets
+      - --changelog-file=changelog-master.yaml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql:5432/semestrovka
+      - --username=postgres
+      - --password=postgres
+      - update
+    volumes:
+      - ./migrations:/changesets
+    networks:
+      - backend
+
+volumes:
+  postgresql_data:
+
+networks:
+  backend:

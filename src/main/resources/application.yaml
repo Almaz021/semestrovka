@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: semestrovka
+
+  liquibase:
+    enabled: false
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+#  datasource:
+#    url: jdbc:postgresql://localhost:5434/semestrovka
+#    username: postgres
+#    password: postgres
+#    driver-class-name: org.postgresql.Driver
+#    hikari:
+#      maximum-pool-size: 10

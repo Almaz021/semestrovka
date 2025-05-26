@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: "DDL/V1_2025_05_26_SCHEMA_INITIALIZATION.sql"
+      relativeToChangelogFile: true
