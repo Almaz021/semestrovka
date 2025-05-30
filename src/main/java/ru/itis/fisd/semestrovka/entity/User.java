@@ -3,6 +3,9 @@ package ru.itis.fisd.semestrovka.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -14,15 +17,22 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "username", nullable = false, unique = true, length = 100)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Column(name = "role", nullable = false)
+    @Column(nullable = false)
     private String role;
+
+    @ManyToMany
+    @JoinTable(
+            name = "favorites",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "apartment_id")
+    )
+    private Set<Apartment> favoriteApartments = new HashSet<>();
 }
