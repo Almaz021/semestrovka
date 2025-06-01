@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+</head>
+<body>
+
+<!-- вставляем header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<section>
+    <h1>Добро пожаловать на сайт квартир</h1>
+    <p>Здесь вы можете выбрать и купить квартиру.</p>
+</section>
+
+<!-- вставляем footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

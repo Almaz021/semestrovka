@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Редактирование профиля</title>
+</head>
+<body>
+
+<!-- вставляем header -->
+<div th:replace="~{fragments/header :: header}"></div>
+<section>
+    <h1>Редактирование профиля</h1>
+
+    <form th:action="@{/profile/edit}" th:object="${profileEditRequest}" method="post">
+        <label>Имя пользователя:
+            <input type="text" th:field="*{username}" />
+        </label>
+        <br/>
+        <label>Пароль:
+            <input type="password" th:field="*{password}" />
+        </label>
+        <br/>
+        <button type="submit">Сохранить</button>
+    </form>
+
+    <a th:href="@{/profile}">Назад к профилю</a>
+</section>
+
+<!-- вставляем footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

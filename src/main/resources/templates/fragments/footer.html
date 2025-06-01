@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<body>
+<div th:fragment="footer">
+    <hr/>
+    <form th:action="@{/callback}" method="post">
+        <label>Имя: <input type="text" name="name" required/></label>
+        <label>Телефон: <input type="tel" name="phone" required/></label>
+        <button type="submit">Обратный звонок</button>
+    </form>
+    <p>&copy; 2025 Semestrovka</p>
+</div>
+</body>
+</html>

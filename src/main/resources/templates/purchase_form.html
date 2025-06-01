@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Оформление покупки</title>
+    <style>
+        .purchase-container {
+            width: 60%;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+
+        .purchase-container form {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<section class="purchase-container">
+    <h1>Оформление покупки</h1>
+
+    <div>
+        <p><strong>Название:</strong> <span th:text="${apartment.title}"></span></p>
+        <p><strong>Адрес:</strong> <span th:text="${apartment.address}"></span></p>
+        <p><strong>Цена:</strong> <span th:text="${apartment.price}"></span> ₽</p>
+        <p><strong>Комнат:</strong> <span th:text="${apartment.rooms}"></span></p>
+        <p><strong>Площадь:</strong> <span th:text="${apartment.area}"></span> кв.м</p>
+    </div>
+
+    <form th:action="@{'/purchase/' + ${apartment.id}}" method="post">
+        <label for="comment">Комментарий к покупке (необязательно):</label><br/>
+        <textarea id="comment" name="comment" rows="4" cols="50"></textarea><br/><br/>
+        <button type="submit">Подтвердить покупку</button>
+    </form>
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

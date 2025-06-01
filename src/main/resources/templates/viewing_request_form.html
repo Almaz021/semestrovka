@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Запись на просмотр</title>
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<section>
+    <h2>Запись на просмотр квартиры: <span th:text="${apartment.title}">Квартира</span></h2>
+
+    <form th:action="@{'/appointments/' + ${apartment.id}}" method="post">
+        <label for="datetime">Выберите дату и время:</label>
+        <input type="datetime-local" id="datetime" name="preferredDateTime" required/>
+
+        <br/><br/>
+        <button type="submit">Отправить заявку</button>
+    </form>
+</section>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои просмотры</title>
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<section>
+    <h2>История заявок на просмотр</h2>
+
+    <div th:if="${requests.isEmpty()}">
+        <p>У вас пока нет записей на просмотры.</p>
+    </div>
+
+    <table th:if="${!requests.isEmpty()}" border="1" cellpadding="10">
+        <thead>
+        <tr>
+            <th>Квартира</th>
+            <th>Адрес</th>
+            <th>Дата и время</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="req : ${requests}">
+            <td th:text="${req.apartment.title}">Квартира</td>
+            <td th:text="${req.apartment.address}">Адрес</td>
+            <td th:text="${#temporals.format(req.preferredDateTime, 'dd.MM.yyyy HH:mm')}">Дата</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

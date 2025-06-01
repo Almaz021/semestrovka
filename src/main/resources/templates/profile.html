@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="ru">
+<head>
+    <title>Профиль</title>
+</head>
+<body>
+
+<!-- вставляем header -->
+<div th:replace="~{fragments/header :: header}"></div>
+<section>
+    <h1>Профиль</h1>
+    <p>Вошли как: <span sec:authentication="name">Пользователь</span></p>
+    <a th:href="@{/profile/edit}">Редактировать</a>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Выйти</button>
+    </form>
+</section>
+
+<!-- вставляем footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
