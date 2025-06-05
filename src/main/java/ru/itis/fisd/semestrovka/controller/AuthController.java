@@ -38,4 +38,9 @@ public class AuthController {
         userService.save(user);
         return "redirect:/login";
     }
+
+    @GetMapping("/access-denied")
+    public String accessDenied() {
+        return "error/403";
+    }
 }
