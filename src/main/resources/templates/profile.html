@@ -10,13 +10,26 @@
 <section>
     <h1>Профиль</h1>
     <p>Вошли как: <span sec:authentication="name">Пользователь</span></p>
-    <a th:href="@{/profile/edit}">Редактировать</a>
+
+    <div>
+        <a th:href="@{/profile/edit}">Редактировать</a>
+    </div>
+
+    <div>
+        <a th:href="@{/purchase/my}">
+            <button type="button">Мои квартиры</button>
+        </a>
+    </div>
+
     <form th:action="@{/logout}" method="post">
         <button type="submit">Выйти</button>
     </form>
 </section>
 
+
 <!-- вставляем footer -->
 <div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/callback-form.js}"></script>
 </body>
 </html>

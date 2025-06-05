@@ -24,7 +24,6 @@
 
 <body>
 
-<!-- вставляем header -->
 <div th:replace="~{fragments/header :: header}"></div>
 <section>
     <h1 th:text="${apartment.title}">Название квартиры</h1>
@@ -36,21 +35,27 @@
         <p><strong>Площадь:</strong> <span th:text="${apartment.area}">0</span> кв.м.</p>
         <p><strong>Этаж:</strong> <span th:text="${apartment.floor}">0</span></p>
 
-        <div class="buttons">
+        <div class="buttons" th:if="${apartment.status == 'available'}">
             <form th:action="@{'/appointments/' + ${apartment.id}}" method="get">
                 <button type="submit">Записаться на просмотр</button>
             </form>
             <form th:action="@{'/purchase/' + ${apartment.id}}" method="get">
                 <button type="submit">Купить</button>
             </form>
-            <form th:action="@{'/favorites/' + ${apartment.id}}" method="post">
-                <button type="submit">Добавить в избранное</button>
-            </form>
+            <button id="favorite-button"
+                    th:data-id="${apartment.id}"
+                    th:data-is-favorite="${isFavorite}"
+                    th:text="${isFavorite} ? 'Удалить из избранного' : 'Добавить в избранное'">
+            </button>
+
         </div>
+
     </div>
 </section>
 
-<!-- вставляем footer -->
 <div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/favorites.js}"></script>
+<script th:src="@{/js/callback-form.js}"></script>
 </body>
 </html>

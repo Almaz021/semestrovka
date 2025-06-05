@@ -19,23 +19,28 @@
             <thead>
             <tr>
                 <th>Квартира</th>
-                <th>Адрес</th>
                 <th>Цена</th>
                 <th>Дата покупки</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="purchase : ${purchases}">
-                <td th:text="${purchase.apartment.title}">Название</td>
-                <td th:text="${purchase.apartment.address}">Адрес</td>
+                <td>
+                    <a th:href="@{/apartments/my/{id}(id=${purchase.apartment.id})}"
+                       th:text="${purchase.apartment.title}"
+                       style="text-decoration: underline; color: blue;"></a>
+                </td>
                 <td th:text="${purchase.apartment.price}">0</td>
                 <td th:text="${#temporals.format(purchase.purchaseDate, 'dd.MM.yyyy HH:mm')}">Дата</td>
             </tr>
             </tbody>
+
         </table>
     </div>
 </section>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/callback-form.js}"></script>
 </body>
 </html>
