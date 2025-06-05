@@ -45,4 +45,18 @@ public class Apartment {
 
     @ManyToMany(mappedBy = "favoriteApartments")
     private Set<User> favoriteBy = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Apartment that = (Apartment) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
 }
