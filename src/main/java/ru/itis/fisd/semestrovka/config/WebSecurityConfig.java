@@ -1,5 +1,7 @@
 package ru.itis.fisd.semestrovka.config;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +13,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -27,29 +31,35 @@ public class WebSecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.requestMatchers(
-                                "/main",
+                                "/swagger-ui/**",
+                                "/",
+                                "/home",
+                                "/apartments/**",
+                                "/callback",
+                                "/js/**",
                                 "/register",
                                 "/login",
                                 "/logout")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .formLogin(formLogin ->
-                        formLogin
-                                .loginPage("/login")
-                                .loginProcessingUrl("/usercheck")
-                                .usernameParameter("username")
-                                .passwordParameter("password")
-                                .defaultSuccessUrl("/index", true)
-                                .failureUrl("/login?error")
-                                .permitAll())
-                .logout(logout ->
-                        logout
-                                .logoutUrl("/logout")
-                                .logoutSuccessUrl("/login?logout")
-                                .invalidateHttpSession(true)
-                                .deleteCookies("JSESSIONID")
-                                .permitAll());
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/login")
+                        .loginProcessingUrl("/usercheck")
+                        .usernameParameter("username")
+                        .passwordParameter("password")
+                        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
+                        .failureUrl("/login?error")
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll())
+                .exceptionHandling(e -> e
+                        .accessDeniedPage("/access-denied")
+                        .authenticationEntryPoint(ajaxAwareAuthenticationEntryPoint()));
         return http.build();
     }
 
@@ -58,5 +68,17 @@ public class WebSecurityConfig {
         AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
         builder.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
         return builder.build();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint ajaxAwareAuthenticationEntryPoint() {
+        return (HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.AuthenticationException authException) -> {
+            String requestedWith = request.getHeader("X-Requested-With");
+            if ("XMLHttpRequest".equals(requestedWith)) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            } else {
+                response.sendRedirect("/login");
+            }
+        };
     }
 }
