@@ -38,18 +38,21 @@ public class ViewingRequestController {
 
     @GetMapping("/{apartmentId}")
     public String showForm(@PathVariable("apartmentId") Long apartmentId, Model model) {
-
         Apartment apartment = apartmentService.findById(apartmentId).orElseThrow();
+        List<LocalDateTime> availableSlots = viewingRequestService.getAvailableSlots(apartment);
+
         model.addAttribute("apartment", apartment);
+        model.addAttribute("availableSlots", availableSlots);
         return "viewing_request_form";
     }
+
 
     @PostMapping("/{apartmentId}")
     public String submitRequest(@PathVariable Long apartmentId,
                                 @RequestParam("preferredDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                 LocalDateTime preferredDateTime,
-                                @AuthenticationPrincipal UserDetails userDetails) {
-
+                                @AuthenticationPrincipal UserDetails userDetails,
+                                Model model) {
         User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
         Apartment apartment = apartmentService.findById(apartmentId).orElseThrow();
 
@@ -59,7 +62,14 @@ public class ViewingRequestController {
                 .preferredDateTime(preferredDateTime)
                 .build();
 
-        viewingRequestService.save(request);
-        return "redirect:/";
+        try {
+            viewingRequestService.save(request);
+            return "redirect:/appointments";
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            model.addAttribute("apartment", apartment);
+            model.addAttribute("error", e.getMessage());
+            return "viewing_request_form";
+        }
     }
+
 }

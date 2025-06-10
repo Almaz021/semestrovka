@@ -39,4 +39,8 @@ public class ApartmentService {
         return apartmentRepository.hasUserPurchasedApartment(apartmentId, user);
     }
 
+    public void deleteById(Long id) {
+        apartmentRepository.deleteById(id);
+    }
+
 }

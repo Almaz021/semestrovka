@@ -24,6 +24,9 @@ public class CallbackRequest {
     @Column(nullable = false)
     private String phone;
 
+    @Column(nullable = false)
+    private String status = "NEW";
+
     @Column(name = "requested_at", nullable = false)
     private LocalDateTime requestedAt;
 }

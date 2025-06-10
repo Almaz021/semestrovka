@@ -21,11 +21,11 @@ public class PurchaseService {
 
     @Transactional
     public void purchaseApartment(User user, Apartment apartment, String comment) {
-        if (!apartment.getStatus().equals("available")) {
+        if (!apartment.getStatus().equals("AVAILABLE")) {
             throw new IllegalStateException("Квартира уже продана");
         }
 
-        apartment.setStatus("sold");
+        apartment.setStatus("SOLD");
         apartmentService.save(apartment);
 
         Purchase purchase = Purchase.builder()
@@ -39,5 +39,9 @@ public class PurchaseService {
 
     public List<Purchase> findAllByUser(User user) {
         return purchaseRepository.findAllByUser(user);
+    }
+
+    public List<Purchase> findAll() {
+        return purchaseRepository.findAll();
     }
 }

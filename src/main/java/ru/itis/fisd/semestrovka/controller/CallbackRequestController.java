@@ -23,6 +23,7 @@ public class CallbackRequestController {
         CallbackRequest callbackRequest = CallbackRequest.builder()
                 .name(name)
                 .phone(phone)
+                .status("NEW")
                 .requestedAt(LocalDateTime.now()).build();
 
         callbackRequestService.save(callbackRequest);

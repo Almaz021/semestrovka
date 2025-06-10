@@ -6,7 +6,6 @@
 </head>
 <body>
 
-<!-- Header -->
 <div th:replace="~{fragments/header :: header}"></div>
 
 <section>
@@ -14,14 +13,24 @@
 
     <form th:action="@{'/appointments/' + ${apartment.id}}" method="post">
         <label for="datetime">Выберите дату и время:</label>
-        <input type="datetime-local" id="datetime" name="preferredDateTime" required/>
+        <select id="datetime" name="preferredDateTime" required>
+            <option th:each="slot : ${availableSlots}"
+                    th:value="${slot}"
+                    th:text="${#temporals.format(slot, 'dd.MM.yyyy HH:mm')}">
+            </option>
+        </select>
 
         <br/><br/>
         <button type="submit">Отправить заявку</button>
     </form>
+
 </section>
 
-<!-- Footer -->
+<div th:if="${error}" style="color:red">
+    <p th:text="${error}"></p>
+</div>
+
+
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 <script th:src="@{/js/callback-form.js}"></script>

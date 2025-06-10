@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Заявки на обратный звонок</title>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h2>Заявки на обратный звонок</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Телефон</th>
+        <th>Время заявки</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="callback : ${callbackRequests}">
+        <td th:text="${callback.id}">1</td>
+        <td th:text="${callback.name}">Имя</td>
+        <td th:text="${callback.phone}">+7...</td>
+        <td th:text="${callback.status}">NEW</td>
+        <td>
+            <form th:action="@{'/operator/callback/' + ${callback.id} + '/mark-done'}" method="post">
+                <button type="submit" th:if="${callback.status != 'DONE'}">Обработано</button>
+                <span th:if="${callback.status == 'DONE'}">✔</span>
+            </form>
+        </td>
+
+        <td th:text="${callback.requestedAt}">01.01.2025</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

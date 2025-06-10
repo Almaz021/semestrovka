@@ -14,6 +14,28 @@
         <span sec:authorize="isAuthenticated()">
         <a th:href="@{/profile}">Профиль</a>
       </span>
+
+        <span sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/admin/apartments}">Управление квартирами</a>
+      </span>
+
+        <span sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/admin/users}">Управление пользователями</a>
+      </span>
+
+        <span sec:authorize="hasRole('ADMIN') or hasRole('OPERATOR')">
+        <a th:href="@{/operator/callback}">Заявки на звонки</a>
+      </span>
+
+
+        <span sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/admin/purchases}">История покупок</a>
+      </span>
+
+        <span sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/admin/viewing-requests}">Заявки на просмотр</a>
+      </span>
+
     </nav>
     <hr/>
 </div>

@@ -13,11 +13,11 @@ import java.util.Optional;
 @Repository
 public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
 
-    @Query("SELECT a FROM Apartment a WHERE a.status = 'available'")
+    @Query("SELECT a FROM Apartment a WHERE a.status = 'AVAILABLE'")
     List<Apartment> findByStatusAvailable();
 
 
-    @Query("SELECT a FROM Apartment a WHERE a.id = :id AND a.status = 'available'")
+    @Query("SELECT a FROM Apartment a WHERE a.id = :id AND a.status = 'AVAILABLE'")
     Optional<Apartment> findByIdAndStatusAvailable(Long id);
 
     @Query("SELECT COUNT(p) > 0 FROM Purchase p WHERE p.apartment.id = :apartmentId AND p.user = :user")

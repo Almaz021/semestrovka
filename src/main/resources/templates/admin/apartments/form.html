@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${apartment.id == null ? 'Добавить' : 'Редактировать'} + ' квартиру'">Форма квартиры</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<section>
+    <h1 th:text="${apartment.id == null ? 'Добавить новую квартиру' : 'Редактировать квартиру'}">Форма квартиры</h1>
+
+    <form th:if="${apartment.id == null}" th:action="@{/admin/apartments}" method="post">
+        <label>Название:
+            <input type="text" name="title" th:value="${apartment.title}" required/>
+        </label><br/>
+
+        <label>Адрес:
+            <input type="text" name="address" th:value="${apartment.address}" required/>
+        </label><br/>
+
+        <label>Цена:
+            <input type="number" name="price" th:value="${apartment.price}" min="0" required/>
+        </label><br/>
+
+        <label>Комнат:
+            <input type="number" name="rooms" th:value="${apartment.rooms}" min="1" required/>
+        </label><br/>
+
+        <label>Площадь (кв.м):
+            <input type="number" name="area" th:value="${apartment.area}" min="1" required/>
+        </label><br/>
+
+        <label>Этаж:
+            <input type="number" name="floor" th:value="${apartment.floor}" min="1" required/>
+        </label><br/>
+
+        <label>Статус:
+            <select name="status" th:value="${apartment.status}">
+                <option value="AVAILABLE" th:selected="${apartment.status == 'AVAILABLE'}">Доступна</option>
+                <option value="SOLD" th:selected="${apartment.status == 'SOLD'}">Продана</option>
+            </select>
+        </label><br/>
+
+        <button type="submit">Сохранить</button>
+        <a th:href="@{/admin/apartments}">Отмена</a>
+    </form>
+
+    <form th:if="${apartment.id != null}" th:action="@{/admin/apartments/edit/{id}(id=${apartment.id})}" method="post">
+        <label>Название:
+            <input type="text" name="title" th:value="${apartment.title}" required/>
+        </label><br/>
+
+        <label>Адрес:
+            <input type="text" name="address" th:value="${apartment.address}" required/>
+        </label><br/>
+
+        <label>Цена:
+            <input type="number" name="price" th:value="${apartment.price}" min="0" required/>
+        </label><br/>
+
+        <label>Комнат:
+            <input type="number" name="rooms" th:value="${apartment.rooms}" min="1" required/>
+        </label><br/>
+
+        <label>Площадь (кв.м):
+            <input type="number" name="area" th:value="${apartment.area}" min="1" required/>
+        </label><br/>
+
+        <label>Этаж:
+            <input type="number" name="floor" th:value="${apartment.floor}" min="1" required/>
+        </label><br/>
+
+        <label>Статус:
+            <select name="status" th:value="${apartment.status}">
+                <option value="AVAILABLE" th:selected="${apartment.status == 'AVAILABLE'}">Доступна</option>
+                <option value="SOLD" th:selected="${apartment.status == 'SOLD'}">Продана</option>
+            </select>
+        </label><br/>
+
+        <button type="submit">Сохранить</button>
+        <a th:href="@{/templates/admin/apartments}">Отмена</a>
+    </form>
+
+
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

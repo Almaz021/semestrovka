@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админка — Квартиры</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<section>
+    <h1>Список квартир</h1>
+
+    <a th:href="@{/admin/apartments/create}">Добавить квартиру</a>
+
+    <div th:if="${#lists.isEmpty(apartments)}">
+        <p>Квартир пока нет.</p>
+    </div>
+
+    <table th:if="${!#lists.isEmpty(apartments)}" border="1" cellpadding="10">
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Цена</th>
+            <th>Статус</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="apartment : ${apartments}">
+            <td th:text="${apartment.title}">Название</td>
+            <td th:text="${apartment.price}">0</td>
+            <td th:text="${apartment.status}">AVAILABLE</td>
+            <td>
+                <a th:href="@{'/admin/apartments/edit/' + ${apartment.id}}">Редактировать</a>
+                |
+                <form th:action="@{'/admin/apartments/delete/' + ${apartment.id}}" method="post"
+                      style="display:inline;" onsubmit="return confirm('Удалить эту квартиру?');">
+                    <button type="submit">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

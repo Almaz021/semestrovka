@@ -1,6 +1,7 @@
 package ru.itis.fisd.semestrovka.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -65,6 +66,7 @@ public class ApartmentController {
     }
 
     @GetMapping("/my/{id}")
+    @PreAuthorize("isAuthenticated()")
     public String viewMyApartment(@PathVariable("id") Long id,
                                   Model model,
                                   @AuthenticationPrincipal UserDetails userDetails) {
@@ -85,6 +87,4 @@ public class ApartmentController {
 
         return "apartment";
     }
-
-
 }

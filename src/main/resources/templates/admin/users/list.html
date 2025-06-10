@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Управление пользователями</title>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h2>Пользователи</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Логин</th>
+        <th>Текущая роль</th>
+        <th>Изменить роль</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}">1</td>
+        <td th:text="${user.username}">user</td>
+        <td th:text="${user.role}">USER</td>
+        <td>
+            <form th:action="@{'/admin/users/' + ${user.id} + '/change-role'}" method="post">
+                <label>
+                    <select name="role">
+                        <option value="USER" th:selected="${user.role == 'USER'}">USER</option>
+                        <option value="OPERATOR" th:selected="${user.role == 'OPERATOR'}">OPERATOR</option>
+                        <option value="ADMIN" th:selected="${user.role == 'ADMIN'}">ADMIN</option>
+                    </select>
+                </label>
+                <button type="submit">Сменить</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

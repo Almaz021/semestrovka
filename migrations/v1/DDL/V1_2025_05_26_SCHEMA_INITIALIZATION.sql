@@ -28,7 +28,7 @@ CREATE TABLE apartments
     rooms       INT,
     area        DECIMAL(7, 2),
     floor       INT,
-    status      VARCHAR,
+    status      VARCHAR DEFAULT 'AVAILABLE',
     ----------------------------------------------------
     CONSTRAINT apartments_id_pk PRIMARY KEY (id),
     CONSTRAINT title_nn CHECK ( title IS NOT NULL ),
@@ -59,8 +59,8 @@ CREATE TABLE viewing_requests
     preferred_datetime TIMESTAMP,
     ---------------------------------------------------------------------------------
     CONSTRAINT viewing_requests_id_pk PRIMARY KEY (id),
-    CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (id),
-    CONSTRAINT apartment_id_fk FOREIGN KEY (apartment_id) REFERENCES apartments (id),
+    CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT apartment_id_fk FOREIGN KEY (apartment_id) REFERENCES apartments (id) ON DELETE CASCADE,
     CONSTRAINT preferred_datetime_nn CHECK ( preferred_datetime IS NOT NULL )
 );
 
@@ -77,8 +77,8 @@ CREATE TABLE favorites
     apartment_id BIGINT,
     --------------------------------------------------------------------------------
     CONSTRAINT favorites_id_pk PRIMARY KEY (id),
-    CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (id),
-    CONSTRAINT apartment_id_fk FOREIGN KEY (apartment_id) REFERENCES apartments (id),
+    CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT apartment_id_fk FOREIGN KEY (apartment_id) REFERENCES apartments (id) ON DELETE CASCADE,
     CONSTRAINT favorites_unique UNIQUE (user_id, apartment_id)
 );
 
@@ -95,8 +95,8 @@ CREATE TABLE purchases
     purchase_date TIMESTAMP,
     ---------------------------------------------------------------------------------
     CONSTRAINT purchases_id_pk PRIMARY KEY (id),
-    CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (id),
-    CONSTRAINT apartment_id_fk FOREIGN KEY (apartment_id) REFERENCES apartments (id),
+    CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT apartment_id_fk FOREIGN KEY (apartment_id) REFERENCES apartments (id) ON DELETE CASCADE,
     CONSTRAINT purchase_date_nn CHECK ( purchase_date IS NOT NULL ),
     CONSTRAINT purchases_unique UNIQUE (user_id, apartment_id)
 );
@@ -112,11 +112,13 @@ CREATE TABLE callback_requests
     id           BIGSERIAL,
     name         VARCHAR(100),
     phone        varchar(20),
+    status       VARCHAR DEFAULT 'NEW',
     requested_at TIMESTAMP,
     -------------------------------------------------------------
     CONSTRAINT callback_request_id PRIMARY KEY (id),
     CONSTRAINT name_nn CHECK ( name IS NOT NULL ),
     CONSTRAINT phone_nn CHECK ( phone IS NOT NULL ),
+    CONSTRAINT status_nn CHECK (status IS NOT NULL ),
     CONSTRAINT requested_at_nn CHECK ( requested_at IS NOT NULL )
 );
 
@@ -124,4 +126,5 @@ COMMENT ON TABLE callback_requests IS 'Таблица заявок на обра
 COMMENT ON COLUMN callback_requests.id IS 'Id заявки';
 COMMENT ON COLUMN callback_requests.name IS 'Имя того, кто оставил заявку';
 COMMENT ON COLUMN callback_requests.phone IS 'Номер телефона того, кто оставил заявку';
+COMMENT ON COLUMN callback_requests.status IS 'Статус заявки';
 COMMENT ON COLUMN callback_requests.requested_at IS 'Дата и время, когда была составлена заявка'

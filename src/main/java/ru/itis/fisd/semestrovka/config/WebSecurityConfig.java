@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -41,6 +42,7 @@ public class WebSecurityConfig {
                                 "/login",
                                 "/logout")
                         .permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest()
                         .authenticated())
                 .formLogin(formLogin -> formLogin
@@ -72,7 +74,7 @@ public class WebSecurityConfig {
 
     @Bean
     public AuthenticationEntryPoint ajaxAwareAuthenticationEntryPoint() {
-        return (HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.AuthenticationException authException) -> {
+        return (HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) -> {
             String requestedWith = request.getHeader("X-Requested-With");
             if ("XMLHttpRequest".equals(requestedWith)) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);

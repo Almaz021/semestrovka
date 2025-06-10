@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Заявки на просмотр</title>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h2>Заявки на просмотр квартир</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Пользователь</th>
+        <th>Квартира</th>
+        <th>Предпочтительное время</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="request : ${viewingRequests}">
+        <td th:text="${request.id}">1</td>
+        <td th:text="${request.user.username}">user123</td>
+        <td th:text="${request.apartment.title}">Квартира</td>
+        <td th:text="${request.getPreferredDateTime()}">01.01.2025</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

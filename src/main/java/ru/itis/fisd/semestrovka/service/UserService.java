@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.itis.fisd.semestrovka.entity.User;
 import ru.itis.fisd.semestrovka.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -13,8 +14,18 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public void updateRole(Long userId, String role) {
+        User user = userRepository.findById(userId).orElseThrow();
+        user.setRole(role);
+        userRepository.save(user);
     }
 
     public void save(User user) {
