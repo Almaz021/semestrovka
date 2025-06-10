@@ -34,5 +34,27 @@
     </tr>
     </tbody>
 </table>
+
+
+<div th:if="${callbackRequests.totalPages > 1}">
+    <span th:text="'Страница ' + (${callbackRequests.number} + 1) + ' из ' + ${callbackRequests.totalPages}"></span>
+
+    <ul style="list-style: none; display: flex; gap: 5px; padding: 0;">
+        <li th:if="${callbackRequests.hasPrevious()}">
+            <a th:href="@{/operator/callback(page=${callbackRequests.number - 1}, size=${callbackRequests.size})}">Предыдущая</a>
+        </li>
+
+        <li th:each="i : ${#numbers.sequence(0, callbackRequests.totalPages - 1)}">
+            <a th:href="@{/operator/callback(page=${i}, size=${callbackRequests.size})}"
+               th:text="${i + 1}"
+               th:classappend="${i == callbackRequests.number} ? 'current-page' : ''"
+               style="padding: 2px 5px; text-decoration: none;"></a>
+        </li>
+
+        <li th:if="${callbackRequests.hasNext()}">
+            <a th:href="@{/operator/callback(page=${callbackRequests.number + 1}, size=${callbackRequests.size})}">Следующая</a>
+        </li>
+    </ul>
+</div>
 </body>
 </html>

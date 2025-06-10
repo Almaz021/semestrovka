@@ -1,6 +1,9 @@
 package ru.itis.fisd.semestrovka.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.itis.fisd.semestrovka.entity.User;
 import ru.itis.fisd.semestrovka.repository.UserRepository;
@@ -14,8 +17,9 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public Page<User> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.findAll(pageable);
     }
 
     public Optional<User> findByUsername(String username) {

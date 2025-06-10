@@ -1,6 +1,7 @@
 package ru.itis.fisd.semestrovka.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.itis.fisd.semestrovka.entity.Apartment;
 import ru.itis.fisd.semestrovka.entity.User;
 import ru.itis.fisd.semestrovka.service.ApartmentService;
@@ -26,18 +28,26 @@ public class ApartmentController {
     private final UserService userService;
 
     @GetMapping
-    public String apartments(Model model) {
+    public String apartments(Model model,
+                             @RequestParam(value = "minPrice", required = false, defaultValue = "0") Integer minPrice,
+                             @RequestParam(value = "maxPrice", required = false, defaultValue = "10000") Integer maxPrice,
+                             @RequestParam(value = "sort", required = false) String sort,
+                             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
 
-        List<Apartment> apartments = apartmentService.findAllAvailable();
+        Page<Apartment> apartmentsPage = apartmentService.findAvailableFiltered(minPrice, maxPrice, sort, page, size);
 
-        model.addAttribute("apartments", apartments);
-        model.addAttribute("sort", "sort");
-        model.addAttribute("minPrice", 0);
-        model.addAttribute("maxPrice", 100);
-
+        model.addAttribute("apartments", apartmentsPage.getContent());
+        model.addAttribute("sort", sort);
+        model.addAttribute("minPrice", minPrice);
+        model.addAttribute("maxPrice", maxPrice);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", apartmentsPage.getTotalPages());
 
         return "apartments";
     }
+
+
 
     @GetMapping("/{id}")
     public String getApartment(@PathVariable("id") Long id,
@@ -54,8 +64,6 @@ public class ApartmentController {
 
         if (userDetails != null) {
             User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
-            System.out.println(user.getFavoriteApartments());
-            System.out.println(apartment);
             boolean isFavorite = user.getFavoriteApartments().contains(apartment);
             model.addAttribute("isFavorite", isFavorite);
         } else {

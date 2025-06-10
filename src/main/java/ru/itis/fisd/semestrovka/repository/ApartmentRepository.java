@@ -1,5 +1,7 @@
 package ru.itis.fisd.semestrovka.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,5 +25,11 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
     @Query("SELECT COUNT(p) > 0 FROM Purchase p WHERE p.apartment.id = :apartmentId AND p.user = :user")
     boolean hasUserPurchasedApartment(@Param("apartmentId") Long apartmentId,
                                       @Param("user") User user);
+
+    @Query("SELECT a FROM Apartment a WHERE a.status = 'AVAILABLE' AND a.price BETWEEN :minPrice AND :maxPrice")
+    Page<Apartment> findByAvailableAndPriceBetween(Integer minPrice, Integer maxPrice, Pageable pageable);
+
+    @Query("SELECT a FROM Apartment a JOIN a.favoriteBy u WHERE u = :user")
+    Page<Apartment> findAllByFavoriteByUser(@Param("user") User user, Pageable pageable);
 
 }

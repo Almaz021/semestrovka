@@ -1,6 +1,8 @@
 package ru.itis.fisd.semestrovka.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.itis.fisd.semestrovka.entity.CallbackRequest;
 import ru.itis.fisd.semestrovka.repository.CallbackRequestRepository;
@@ -13,8 +15,8 @@ public class CallbackRequestService {
 
     private final CallbackRequestRepository callbackRequestRepository;
 
-    public List<CallbackRequest> findAllOrderByStatusAndDate() {
-        return callbackRequestRepository.findAllOrderByStatusAndDate();
+    public Page<CallbackRequest> findAllOrderByStatusAndDate(Pageable pageable) {
+        return callbackRequestRepository.findAllOrderByStatusAndDate(pageable);
     }
 
     public CallbackRequest save(CallbackRequest request) {

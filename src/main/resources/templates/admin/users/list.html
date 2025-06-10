@@ -37,5 +37,21 @@
     </tr>
     </tbody>
 </table>
+
+<div th:if="${totalPages > 1}" style="margin-top: 20px;">
+    <a th:if="${currentPage > 0}"
+       th:href="@{/admin/users(page=${currentPage - 1}, size=${size})}">Назад</a>
+
+    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+        <a th:href="@{/admin/users(page=${i}, size=${size})}"
+           th:text="${i + 1}"
+           th:classappend="${i == currentPage} ? 'current-page' : ''"
+           style="margin: 0 5px; text-decoration: none; font-weight: normal;"></a>
+    </span>
+
+    <a th:if="${currentPage < totalPages - 1}"
+       th:href="@{/admin/users(page=${currentPage + 1}, size=${size})}">Вперёд</a>
+</div>
+
 </body>
 </html>

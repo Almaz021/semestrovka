@@ -29,6 +29,7 @@
     <h1 th:text="${apartment.title}">Название квартиры</h1>
 
     <div class="apartment-detail">
+        <p><strong>Описание:</strong> <span th:text="${apartment.description}">0</span></p>
         <p><strong>Адрес:</strong> <span th:text="${apartment.address}">Адрес</span></p>
         <p><strong>Цена:</strong> <span th:text="${apartment.price}">0</span> ₽</p>
         <p><strong>Комнат:</strong> <span th:text="${apartment.rooms}">0</span></p>

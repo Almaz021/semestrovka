@@ -1,6 +1,8 @@
 package ru.itis.fisd.semestrovka.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,11 +25,19 @@ public class FavoritesController {
     private final ApartmentService apartmentService;
 
     @GetMapping
-    public String showFavorites(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String showFavorites(Model model,
+                                @AuthenticationPrincipal UserDetails userDetails,
+                                @RequestParam(value = "page", defaultValue = "0") int page,
+                                @RequestParam(value = "size", defaultValue = "5") int size) {
 
-        Optional<User> user = userService.findByUsername(userDetails.getUsername());
+        User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
 
-        user.ifPresent(current -> model.addAttribute("favorites", current.getFavoriteApartments()));
+        Page<Apartment> favoritesPage = apartmentService.findFavoritesByUser(user, PageRequest.of(page, size));
+
+        model.addAttribute("favorites", favoritesPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", favoritesPage.getTotalPages());
+        model.addAttribute("size", size);
 
         return "favorites";
     }

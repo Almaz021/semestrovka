@@ -25,17 +25,36 @@
             </thead>
             <tbody>
             <tr th:each="purchase : ${purchases}">
-                <td>
-                    <a th:href="@{/apartments/my/{id}(id=${purchase.apartment.id})}"
-                       th:text="${purchase.apartment.title}"
-                       style="text-decoration: underline; color: blue;"></a>
+                <td th:text="${purchase.apartment.title}"
+                    style="text-decoration: underline; color: blue;"
+                    th:onclick="'window.location.href=\'/apartments/' + ${purchase.apartment.id} + '\';'">
+
                 </td>
                 <td th:text="${purchase.apartment.price}">0</td>
                 <td th:text="${#temporals.format(purchase.purchaseDate, 'dd.MM.yyyy HH:mm')}">Дата</td>
             </tr>
             </tbody>
-
         </table>
+
+        <div>
+            <span th:text="'Страница ' + ${purchasesPage.number + 1} + ' из ' + ${purchasesPage.totalPages}"></span>
+        </div>
+        <div>
+            <ul style="list-style: none; display: flex; gap: 5px;">
+                <li th:if="${purchasesPage.hasPrevious()}">
+                    <a th:href="@{/purchases/my(page=${purchasesPage.number - 1}, size=${purchasesPage.size})}">Предыдущая</a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(0, purchasesPage.totalPages - 1)}">
+                    <a th:href="@{/purchases/my(page=${i}, size=${purchasesPage.size})}"
+                       th:text="${i + 1}"
+                       th:classappend="${i == purchasesPage.number} ? 'current-page' : ''"
+                       style="padding: 2px 5px; text-decoration: none;"></a>
+                </li>
+                <li th:if="${purchasesPage.hasNext()}">
+                    <a th:href="@{/purchases/my(page=${purchasesPage.number + 1}, size=${purchasesPage.size})}">Следующая</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </section>
 

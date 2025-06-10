@@ -1,6 +1,9 @@
 package ru.itis.fisd.semestrovka.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.itis.fisd.semestrovka.entity.Apartment;
 import ru.itis.fisd.semestrovka.entity.User;
@@ -18,8 +21,9 @@ public class ViewingRequestService {
     private final ViewingRequestRepository viewingRequestRepository;
 
 
-    public List<ViewingRequest> findAllByUser(User user) {
-        return viewingRequestRepository.findAllByUser(user);
+
+    public Page<ViewingRequest> findAllByUser(User user, Pageable pageable) {
+        return viewingRequestRepository.findAllByUser(user, pageable);
     }
 
     public void save(ViewingRequest request) {
@@ -43,8 +47,9 @@ public class ViewingRequestService {
     }
 
 
-    public List<ViewingRequest> findAll() {
-        return viewingRequestRepository.findAll();
+    public Page<ViewingRequest> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return viewingRequestRepository.findAll(pageable);
     }
 
     public List<LocalDateTime> getAvailableSlots(Apartment apartment) {

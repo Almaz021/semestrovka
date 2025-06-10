@@ -1,6 +1,9 @@
 package ru.itis.fisd.semestrovka.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.fisd.semestrovka.entity.Apartment;
@@ -37,11 +40,13 @@ public class PurchaseService {
         purchaseRepository.save(purchase);
     }
 
-    public List<Purchase> findAllByUser(User user) {
-        return purchaseRepository.findAllByUser(user);
+    public Page<Purchase> findAllByUser(User user, Pageable pageable) {
+        return purchaseRepository.findAllByUser(user, pageable);
     }
 
-    public List<Purchase> findAll() {
-        return purchaseRepository.findAll();
+
+    public Page<Purchase> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return purchaseRepository.findAll(pageable);
     }
 }

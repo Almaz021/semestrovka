@@ -6,7 +6,6 @@
 </head>
 <body>
 
-<!-- Header -->
 <div th:replace="~{fragments/header :: header}"></div>
 
 <section>
@@ -26,15 +25,37 @@
         </thead>
         <tbody>
         <tr th:each="req : ${requests}">
-            <td th:text="${req.apartment.title}">Квартира</td>
+            <td th:text="${req.apartment.title}"  th:onclick="'window.location.href=\'/apartments/' + ${req.apartment.id} + '\';'">Квартира</td>
             <td th:text="${req.apartment.address}">Адрес</td>
             <td th:text="${#temporals.format(req.preferredDateTime, 'dd.MM.yyyy HH:mm')}">Дата</td>
         </tr>
         </tbody>
     </table>
+
+    <div th:if="${!requests.isEmpty()}">
+        <div>
+            <span th:text="'Страница ' + ${requests.number + 1} + ' из ' + ${requests.totalPages}"></span>
+        </div>
+        <div>
+            <ul style="list-style: none; display: flex; gap: 5px;">
+                <li th:if="${requests.hasPrevious()}">
+                    <a th:href="@{/appointments(page=${requests.number - 1}, size=${requests.size})}">Предыдущая</a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(0, requests.totalPages - 1)}">
+                    <a th:href="@{/appointments(page=${i}, size=${requests.size})}"
+                       th:text="${i + 1}"
+                       th:classappend="${i == requests.number} ? 'current-page' : ''"
+                       style="padding: 2px 5px; text-decoration: none;"></a>
+                </li>
+                <li th:if="${requests.hasNext()}">
+                    <a th:href="@{/appointments(page=${requests.number + 1}, size=${requests.size})}">Следующая</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
 </section>
 
-<!-- Footer -->
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 <script th:src="@{/js/callback-form.js}"></script>

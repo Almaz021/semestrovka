@@ -1,6 +1,7 @@
 package ru.itis.fisd.semestrovka.controller.admin;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,10 +18,24 @@ public class AdminApartmentController {
     private final ApartmentService apartmentService;
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("apartments", apartmentService.findAll());
+    public String list(Model model,
+                       @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                       @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+                       @RequestParam(value = "sort", required = false, defaultValue = "id") String sort,
+                       @RequestParam(value = "dir", required = false, defaultValue = "asc") String dir) {
+
+        Page<Apartment> apartmentsPage = apartmentService.findAll(page, size, sort, dir);
+
+        model.addAttribute("apartments", apartmentsPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", apartmentsPage.getTotalPages());
+        model.addAttribute("size", size);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+
         return "admin/apartments/list";
     }
+
 
     @GetMapping("/create")
     public String createForm(Model model) {

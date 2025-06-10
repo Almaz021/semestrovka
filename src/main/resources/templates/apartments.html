@@ -19,7 +19,6 @@
 </head>
 <body>
 
-<!-- вставляем header -->
 <div th:replace="~{fragments/header :: header}"></div>
 <section>
     <h1>Список квартир</h1>
@@ -55,9 +54,33 @@
             <p>Этаж: <span th:text="${apartment.floor}">0</span></p>
         </div>
     </div>
+
+    <div class="pagination" style="margin-top: 20px;">
+    <span th:if="${totalPages > 1}">
+        <a th:if="${currentPage > 0}"
+           th:href="@{/apartments(minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort}, page=${currentPage - 1}, size=10)}">Назад</a>
+
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:href="@{/apartments(minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort}, page=${i}, size=10)}"
+               th:text="${i + 1}"
+               th:classappend="${i == currentPage} ? 'current-page' : ''"
+               style="margin: 0 5px; text-decoration: none; font-weight: normal;"></a>
+        </span>
+
+        <a th:if="${currentPage < totalPages - 1}"
+           th:href="@{/apartments(minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort}, page=${currentPage + 1}, size=10)}">Вперёд</a>
+    </span>
+    </div>
+
+    <style>
+        .current-page {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+
 </section>
 
-<!-- вставляем footer -->
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 <script th:src="@{/js/callback-form.js}"></script>

@@ -17,6 +17,26 @@
         <p>Квартир пока нет.</p>
     </div>
 
+    <form method="get" th:action="@{/admin/apartments}">
+        <label>Сортировать по:
+            <select name="sort">
+                <option value="id" th:selected="${sort == 'id'}">ID</option>
+                <option value="price" th:selected="${sort == 'price'}">Цена</option>
+                <option value="title" th:selected="${sort == 'title'}">Название</option>
+            </select>
+        </label>
+        <label>Направление:
+            <select name="dir">
+                <option value="asc" th:selected="${dir == 'asc'}">По возрастанию</option>
+                <option value="desc" th:selected="${dir == 'desc'}">По убыванию</option>
+            </select>
+        </label>
+        <label>Размер страницы:
+            <input type="number" name="size" min="1" max="100" th:value="${size}" />
+        </label>
+        <button type="submit">Применить</button>
+    </form>
+
     <table th:if="${!#lists.isEmpty(apartments)}" border="1" cellpadding="10">
         <thead>
         <tr>
@@ -42,6 +62,28 @@
         </tr>
         </tbody>
     </table>
+
+    <div th:if="${totalPages > 1}">
+        <a th:if="${currentPage > 0}"
+           th:href="@{/admin/apartments(page=${currentPage - 1}, size=${size}, sort=${sort}, dir=${dir})}">Назад</a>
+
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+        <a th:href="@{/admin/apartments(page=${i}, size=${size}, sort=${sort}, dir=${dir})}"
+           th:text="${i + 1}"
+           th:classappend="${i == currentPage} ? 'current-page' : ''"
+           style="margin: 0 5px; text-decoration: none; font-weight: normal;"></a>
+    </span>
+
+        <a th:if="${currentPage < totalPages - 1}"
+           th:href="@{/admin/apartments(page=${currentPage + 1}, size=${size}, sort=${sort}, dir=${dir})}">Вперёд</a>
+    </div>
+
+    <style>
+        .current-page {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
 </section>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

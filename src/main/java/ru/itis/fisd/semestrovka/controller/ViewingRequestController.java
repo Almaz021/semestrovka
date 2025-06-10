@@ -1,6 +1,8 @@
 package ru.itis.fisd.semestrovka.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,12 +30,19 @@ public class ViewingRequestController {
 
 
     @GetMapping
-    public String appointments(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String appointments(
+            Model model,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
         User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
-        List<ViewingRequest> requests = viewingRequestService.findAllByUser(user);
-        model.addAttribute("requests", requests);
+        Page<ViewingRequest> requestsPage = viewingRequestService.findAllByUser(user, PageRequest.of(page, size));
+
+        model.addAttribute("requests", requestsPage);
         return "appointments";
     }
+
 
 
     @GetMapping("/{apartmentId}")
