@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.itis.fisd.semestrovka.entity.User;
+import ru.itis.fisd.semestrovka.entity.orm.User;
 
 import java.util.Collection;
 import java.util.List;

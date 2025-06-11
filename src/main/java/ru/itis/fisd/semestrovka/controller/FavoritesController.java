@@ -1,72 +1,79 @@
 package ru.itis.fisd.semestrovka.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.itis.fisd.semestrovka.entity.Apartment;
-import ru.itis.fisd.semestrovka.entity.User;
+import ru.itis.fisd.semestrovka.dto.ApartmentDto;
+import ru.itis.fisd.semestrovka.entity.orm.Apartment;
+import ru.itis.fisd.semestrovka.entity.orm.User;
 import ru.itis.fisd.semestrovka.service.ApartmentService;
 import ru.itis.fisd.semestrovka.service.UserService;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@Controller
-@RequestMapping("/favorites")
+@RestController
+@RequestMapping("api/favorites")
 @RequiredArgsConstructor
+@Slf4j
 public class FavoritesController {
 
     private final UserService userService;
     private final ApartmentService apartmentService;
 
     @GetMapping
-    public String showFavorites(Model model,
-                                @AuthenticationPrincipal UserDetails userDetails,
-                                @RequestParam(value = "page", defaultValue = "0") int page,
-                                @RequestParam(value = "size", defaultValue = "5") int size) {
+    public ResponseEntity<?> getFavorites(@AuthenticationPrincipal UserDetails userDetails,
+                                          @RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "5") int size) {
 
-        User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
+        log.info("Getting favorites");
 
-        Page<Apartment> favoritesPage = apartmentService.findFavoritesByUser(user, PageRequest.of(page, size));
+        User user = userService.findByUsername(userDetails.getUsername());
 
-        model.addAttribute("favorites", favoritesPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", favoritesPage.getTotalPages());
-        model.addAttribute("size", size);
+        Page<Apartment> favorites = apartmentService.findFavoritesByUser(user, PageRequest.of(page, size));
 
-        return "favorites";
+        List<ApartmentDto> apartmentDtos = favorites.getContent().stream()
+                .map(ApartmentDto::from)
+                .collect(Collectors.toList());
+
+        log.info("Found {} favorites", apartmentDtos.size());
+
+        return ResponseEntity.ok().body(apartmentDtos);
     }
 
-    @PostMapping(value = "/{id}", headers = "X-Requested-With=XMLHttpRequest")
-    @ResponseBody
+    @PostMapping("/{id}")
     public ResponseEntity<?> addToFavorites(@AuthenticationPrincipal UserDetails userDetails,
-                                            @PathVariable("id") Long id) {
-        User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
-        Apartment apartment = apartmentService.findByIdAvailable(id).orElseThrow();
+                                            @PathVariable Long id) {
+        log.info("Adding to favorites");
+        User user = userService.findByUsername(userDetails.getUsername());
+        Apartment apartment = apartmentService.findByIdAvailable(id);
 
         user.getFavoriteApartments().add(apartment);
         userService.save(user);
 
+        log.info("Added to favorites");
+
         return ResponseEntity.ok().build();
     }
 
-
-    @PostMapping(value = "/{id}/remove", headers = "X-Requested-With=XMLHttpRequest")
-    @ResponseBody
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> removeFromFavorites(@AuthenticationPrincipal UserDetails userDetails,
-                                                 @PathVariable("id") Long id) {
-        User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
-        Apartment apartment = apartmentService.findByIdAvailable(id).orElseThrow();
+                                                 @PathVariable Long id) {
+        log.info("Removing from favorites");
+
+        User user = userService.findByUsername(userDetails.getUsername());
+        Apartment apartment = apartmentService.findByIdAvailable(id);
 
         user.getFavoriteApartments().remove(apartment);
         userService.save(user);
 
-        return ResponseEntity.ok().build();
-    }
+        log.info("Removed from favorites");
 
+        return ResponseEntity.noContent().build();
+    }
 }

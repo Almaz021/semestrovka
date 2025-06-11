@@ -1,6 +1,7 @@
 package ru.itis.fisd.semestrovka.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,9 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.itis.fisd.semestrovka.entity.Apartment;
-import ru.itis.fisd.semestrovka.entity.User;
-import ru.itis.fisd.semestrovka.entity.ViewingRequest;
+import ru.itis.fisd.semestrovka.entity.orm.Apartment;
+import ru.itis.fisd.semestrovka.entity.orm.User;
+import ru.itis.fisd.semestrovka.entity.orm.ViewingRequest;
 import ru.itis.fisd.semestrovka.service.ApartmentService;
 import ru.itis.fisd.semestrovka.service.UserService;
 import ru.itis.fisd.semestrovka.service.ViewingRequestService;
@@ -22,6 +23,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/appointments")
 @RequiredArgsConstructor
+@Slf4j
 public class ViewingRequestController {
 
     private final UserService userService;
@@ -36,10 +38,14 @@ public class ViewingRequestController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
+        log.debug("Prepare appointments page");
+
+        User user = userService.findByUsername(userDetails.getUsername());
         Page<ViewingRequest> requestsPage = viewingRequestService.findAllByUser(user, PageRequest.of(page, size));
 
         model.addAttribute("requests", requestsPage);
+
+        log.debug("Show appointments page");
         return "appointments";
     }
 
@@ -47,11 +53,14 @@ public class ViewingRequestController {
 
     @GetMapping("/{apartmentId}")
     public String showForm(@PathVariable("apartmentId") Long apartmentId, Model model) {
-        Apartment apartment = apartmentService.findById(apartmentId).orElseThrow();
+        log.debug("Prepare viewing request form page");
+        Apartment apartment = apartmentService.findById(apartmentId);
         List<LocalDateTime> availableSlots = viewingRequestService.getAvailableSlots(apartment);
 
         model.addAttribute("apartment", apartment);
         model.addAttribute("availableSlots", availableSlots);
+
+        log.debug("Show viewing request form page");
         return "viewing_request_form";
     }
 
@@ -62,8 +71,9 @@ public class ViewingRequestController {
                                 LocalDateTime preferredDateTime,
                                 @AuthenticationPrincipal UserDetails userDetails,
                                 Model model) {
-        User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
-        Apartment apartment = apartmentService.findById(apartmentId).orElseThrow();
+        log.debug("Handle viewing request");
+        User user = userService.findByUsername(userDetails.getUsername());
+        Apartment apartment = apartmentService.findById(apartmentId);
 
         ViewingRequest request = ViewingRequest.builder()
                 .user(user)
@@ -73,10 +83,12 @@ public class ViewingRequestController {
 
         try {
             viewingRequestService.save(request);
+            log.debug("Save viewing request");
             return "redirect:/appointments";
         } catch (IllegalArgumentException | IllegalStateException e) {
             model.addAttribute("apartment", apartment);
             model.addAttribute("error", e.getMessage());
+            log.info("Failed to save viewing request");
             return "viewing_request_form";
         }
     }

@@ -14,22 +14,24 @@
         <th>ID</th>
         <th>Имя</th>
         <th>Телефон</th>
+        <th>Статус</th>
+        <th>Действие</th>
         <th>Время заявки</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="callback : ${callbackRequests}">
+    <tr th:each="callback : ${callbackRequests}" th:attr="data-id=${callback.id}">
         <td th:text="${callback.id}">1</td>
         <td th:text="${callback.name}">Имя</td>
         <td th:text="${callback.phone}">+7...</td>
-        <td th:text="${callback.status}">NEW</td>
-        <td>
-            <form th:action="@{'/operator/callback/' + ${callback.id} + '/mark-done'}" method="post">
-                <button type="submit" th:if="${callback.status != 'DONE'}">Обработано</button>
-                <span th:if="${callback.status == 'DONE'}">✔</span>
-            </form>
+        <td class="status" th:text="${callback.status}">NEW</td>
+        <td class="action">
+            <button type="button"
+                    class="mark-done-btn"
+                    th:if="${callback.status != 'DONE'}"
+                    th:attr="data-id=${callback.id}">Обработано</button>
+            <span th:if="${callback.status == 'DONE'}">✔</span>
         </td>
-
         <td th:text="${callback.requestedAt}">01.01.2025</td>
     </tr>
     </tbody>

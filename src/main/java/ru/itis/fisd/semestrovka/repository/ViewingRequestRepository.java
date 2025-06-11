@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import ru.itis.fisd.semestrovka.entity.User;
-import ru.itis.fisd.semestrovka.entity.ViewingRequest;
+import ru.itis.fisd.semestrovka.entity.orm.User;
+import ru.itis.fisd.semestrovka.entity.orm.ViewingRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ru.itis.fisd.semestrovka.entity;
+package ru.itis.fisd.semestrovka.entity.orm;
 
 import jakarta.persistence.*;
 import lombok.*;

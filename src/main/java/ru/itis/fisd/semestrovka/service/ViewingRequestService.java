@@ -5,9 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.itis.fisd.semestrovka.entity.Apartment;
-import ru.itis.fisd.semestrovka.entity.User;
-import ru.itis.fisd.semestrovka.entity.ViewingRequest;
+import ru.itis.fisd.semestrovka.entity.orm.Apartment;
+import ru.itis.fisd.semestrovka.entity.orm.User;
+import ru.itis.fisd.semestrovka.entity.orm.ViewingRequest;
 import ru.itis.fisd.semestrovka.repository.ViewingRequestRepository;
 
 import java.time.LocalDateTime;

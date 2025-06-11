@@ -6,12 +6,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.itis.fisd.semestrovka.entity.Apartment;
-import ru.itis.fisd.semestrovka.entity.User;
+import ru.itis.fisd.semestrovka.entity.orm.Apartment;
+import ru.itis.fisd.semestrovka.entity.orm.User;
+import ru.itis.fisd.semestrovka.exception.ApartmentNotFoundException;
 import ru.itis.fisd.semestrovka.repository.ApartmentRepository;
 
-import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,16 +25,12 @@ public class ApartmentService {
         return apartmentRepository.findAll(pageable);
     }
 
-    public List<Apartment> findAllAvailable() {
-        return apartmentRepository.findByStatusAvailable();
+    public Apartment findByIdAvailable(Long id) {
+        return apartmentRepository.findByIdAndStatusAvailable(id).orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
-    public Optional<Apartment> findByIdAvailable(Long id) {
-        return apartmentRepository.findByIdAndStatusAvailable(id);
-    }
-
-    public Optional<Apartment> findById(Long apartmentId) {
-        return apartmentRepository.findById(apartmentId);
+    public Apartment findById(Long apartmentId) {
+        return apartmentRepository.findById(apartmentId).orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
     }
 
     public void save(Apartment apartment) {

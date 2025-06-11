@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.itis.fisd.semestrovka.entity.User;
+import ru.itis.fisd.semestrovka.entity.orm.User;
 import ru.itis.fisd.semestrovka.service.UserService;
 
 @Service
@@ -16,8 +16,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        User user = service.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Not found"));
+        User user = service.findByUsername(username);
         return new UserDetailsImpl(user);
     }
 }

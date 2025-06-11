@@ -1,6 +1,7 @@
 package ru.itis.fisd.semestrovka.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,18 +10,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.itis.fisd.semestrovka.entity.Apartment;
-import ru.itis.fisd.semestrovka.entity.Purchase;
-import ru.itis.fisd.semestrovka.entity.User;
+import ru.itis.fisd.semestrovka.entity.orm.Apartment;
+import ru.itis.fisd.semestrovka.entity.orm.Purchase;
+import ru.itis.fisd.semestrovka.entity.orm.User;
 import ru.itis.fisd.semestrovka.service.ApartmentService;
 import ru.itis.fisd.semestrovka.service.PurchaseService;
 import ru.itis.fisd.semestrovka.service.UserService;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/purchase")
 @RequiredArgsConstructor
+@Slf4j
 public class PurchaseController {
 
     private final ApartmentService apartmentService;
@@ -31,9 +31,13 @@ public class PurchaseController {
     @PreAuthorize("isAuthenticated()")
     public String purchaseForm(@PathVariable Long apartmentId, Model model) {
 
-        Apartment apartment = apartmentService.findByIdAvailable(apartmentId).orElseThrow();
+        log.debug("Prepare purchase form page");
+
+        Apartment apartment = apartmentService.findByIdAvailable(apartmentId);
 
         model.addAttribute("apartment", apartment);
+
+        log.debug("Show purchase form page");
         return "purchase_form";
     }
 
@@ -42,10 +46,14 @@ public class PurchaseController {
     public String confirmPurchase(@PathVariable Long apartmentId,
                                   @RequestParam(required = false) String comment,
                                   @AuthenticationPrincipal UserDetails userDetails) {
-        User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
-        Apartment apartment = apartmentService.findByIdAvailable(apartmentId).orElseThrow();
+        log.debug("Handling confirm purchase form");
+
+        User user = userService.findByUsername(userDetails.getUsername());
+        Apartment apartment = apartmentService.findByIdAvailable(apartmentId);
 
         purchaseService.purchaseApartment(user, apartment, comment);
+
+        log.debug("Handled confirm purchase form");
 
         return "redirect:/purchase/my";
     }
@@ -58,12 +66,39 @@ public class PurchaseController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
+        log.debug("Prepare user purchases page");
+
+        User user = userService.findByUsername(userDetails.getUsername());
 
         Page<Purchase> purchasesPage = purchaseService.findAllByUser(user, PageRequest.of(page, size));
 
         model.addAttribute("purchasesPage", purchasesPage);
+
+        log.debug("Show user purchases page");
         return "purchases";
     }
+
+    @GetMapping("/my/{purchaseId}")
+    @PreAuthorize("isAuthenticated()")
+    public String viewMyPurchase(@PathVariable Long purchaseId,
+                                 Model model,
+                                 @AuthenticationPrincipal UserDetails userDetails) {
+        log.debug("Handling users purchase page");
+
+        User user = userService.findByUsername(userDetails.getUsername());
+        Purchase purchase = purchaseService.findById(purchaseId);
+
+        if (!purchase.getUser().getId().equals(user.getId())) {
+            log.warn("Purchase is not owned by user");
+            return "error/403";
+        }
+
+        model.addAttribute("purchase", purchase);
+        model.addAttribute("apartment", purchase.getApartment());
+
+        log.debug("Show user purchase page");
+        return "apartment";
+    }
+
 
 }

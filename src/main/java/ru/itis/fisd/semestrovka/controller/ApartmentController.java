@@ -1,6 +1,7 @@
 package ru.itis.fisd.semestrovka.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -11,17 +12,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.itis.fisd.semestrovka.entity.Apartment;
-import ru.itis.fisd.semestrovka.entity.User;
+import ru.itis.fisd.semestrovka.entity.orm.Apartment;
+import ru.itis.fisd.semestrovka.entity.orm.User;
 import ru.itis.fisd.semestrovka.service.ApartmentService;
 import ru.itis.fisd.semestrovka.service.UserService;
-
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/apartments")
 @RequiredArgsConstructor
+@Slf4j
 public class ApartmentController {
 
     private final ApartmentService apartmentService;
@@ -31,9 +30,11 @@ public class ApartmentController {
     public String apartments(Model model,
                              @RequestParam(value = "minPrice", required = false, defaultValue = "0") Integer minPrice,
                              @RequestParam(value = "maxPrice", required = false, defaultValue = "10000") Integer maxPrice,
-                             @RequestParam(value = "sort", required = false) String sort,
+                             @RequestParam(value = "sort", required = false, defaultValue = "asc") String sort,
                              @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
                              @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+
+        log.debug("Prepare apartments page");
 
         Page<Apartment> apartmentsPage = apartmentService.findAvailableFiltered(minPrice, maxPrice, sort, page, size);
 
@@ -44,32 +45,32 @@ public class ApartmentController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", apartmentsPage.getTotalPages());
 
+        log.debug("Show apartments page");
         return "apartments";
     }
-
 
 
     @GetMapping("/{id}")
     public String getApartment(@PathVariable("id") Long id,
                                Model model,
                                @AuthenticationPrincipal UserDetails userDetails) {
-        Optional<Apartment> apartmentOptional = apartmentService.findByIdAvailable(id);
+        log.debug("Prepare apartment page with id = {}", id);
+        Apartment apartment = apartmentService.findByIdAvailable(id);
 
-        if (apartmentOptional.isEmpty()) {
-            return "redirect:/apartments";
-        }
-
-        Apartment apartment = apartmentOptional.get();
+//        if (apartmentOptional.isEmpty()) {
+//            return "redirect:/apartments";
+//        }
         model.addAttribute("apartment", apartment);
 
         if (userDetails != null) {
-            User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
+            User user = userService.findByUsername(userDetails.getUsername());
             boolean isFavorite = user.getFavoriteApartments().contains(apartment);
             model.addAttribute("isFavorite", isFavorite);
         } else {
             model.addAttribute("isFavorite", false);
         }
 
+        log.debug("Show apartment page");
         return "apartment";
     }
 
@@ -78,11 +79,9 @@ public class ApartmentController {
     public String viewMyApartment(@PathVariable("id") Long id,
                                   Model model,
                                   @AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
-            return "redirect:/login";
-        }
+        log.debug("Prepare purchased apartment page with id = {}", id);
 
-        User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
+        User user = userService.findByUsername(userDetails.getUsername());
 
         boolean hasPurchased = apartmentService.hasUserPurchasedApartment(id, user);
 
@@ -90,8 +89,10 @@ public class ApartmentController {
             return "redirect:/home";
         }
 
-        Apartment apartment = apartmentService.findById(id).orElseThrow();
+        Apartment apartment = apartmentService.findById(id);
         model.addAttribute("apartment", apartment);
+
+        log.debug("Show purchased apartment");
 
         return "apartment";
     }

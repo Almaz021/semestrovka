@@ -6,13 +6,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itis.fisd.semestrovka.entity.Apartment;
-import ru.itis.fisd.semestrovka.entity.Purchase;
-import ru.itis.fisd.semestrovka.entity.User;
+import ru.itis.fisd.semestrovka.entity.orm.Apartment;
+import ru.itis.fisd.semestrovka.entity.orm.Purchase;
+import ru.itis.fisd.semestrovka.entity.orm.User;
+import ru.itis.fisd.semestrovka.exception.PurchaseNotFoundException;
 import ru.itis.fisd.semestrovka.repository.PurchaseRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -48,5 +48,9 @@ public class PurchaseService {
     public Page<Purchase> findAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return purchaseRepository.findAll(pageable);
+    }
+
+    public Purchase findById(Long purchaseId) {
+        return purchaseRepository.findById(purchaseId).orElseThrow(() -> new PurchaseNotFoundException(purchaseId));
     }
 }

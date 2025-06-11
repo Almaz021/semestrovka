@@ -1,16 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
     const button = document.getElementById("favorite-button");
 
+    if (!button) return;
+
     button.addEventListener("click", function () {
         const apartmentId = button.getAttribute("data-id");
         const isFavorite = button.getAttribute("data-is-favorite") === "true";
 
-        const url = isFavorite
-            ? `/favorites/${apartmentId}/remove`
-            : `/favorites/${apartmentId}`;
+        const url = `/api/favorites/${apartmentId}`;
+        const method = isFavorite ? 'DELETE' : 'POST';
 
         fetch(url, {
-            method: 'POST',
+            method: method,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/json'

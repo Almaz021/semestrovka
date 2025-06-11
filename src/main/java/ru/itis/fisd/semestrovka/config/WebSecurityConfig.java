@@ -3,6 +3,7 @@ package ru.itis.fisd.semestrovka.config;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
+@Slf4j
 public class WebSecurityConfig {
 
     private final UserDetailsService userDetailsService;
@@ -38,6 +40,7 @@ public class WebSecurityConfig {
                                 "/apartments/**",
                                 "/callback",
                                 "/js/**",
+                                "/css/**",
                                 "/register",
                                 "/login",
                                 "/logout")
@@ -77,8 +80,10 @@ public class WebSecurityConfig {
         return (HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) -> {
             String requestedWith = request.getHeader("X-Requested-With");
             if ("XMLHttpRequest".equals(requestedWith)) {
+                log.info("Unauthorized access with X-Requested-With: {}", request.getHeader("X-Requested-With"));
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             } else {
+                log.info("Unauthorized access: {}", authException.getMessage());
                 response.sendRedirect("/login");
             }
         };

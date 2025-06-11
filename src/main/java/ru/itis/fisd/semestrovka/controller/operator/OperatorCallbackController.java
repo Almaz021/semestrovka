@@ -1,22 +1,24 @@
 package ru.itis.fisd.semestrovka.controller.operator;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.itis.fisd.semestrovka.entity.CallbackRequest;
+import ru.itis.fisd.semestrovka.entity.orm.CallbackRequest;
 import ru.itis.fisd.semestrovka.service.CallbackRequestService;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/operator/callback")
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+@Slf4j
 public class OperatorCallbackController {
 
     private final CallbackRequestService callbackRequestService;
@@ -27,17 +29,27 @@ public class OperatorCallbackController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
+        log.debug("Prepare operator callback list page");
         Pageable pageable = PageRequest.of(page, size);
         Page<CallbackRequest> callbackRequests = callbackRequestService.findAllOrderByStatusAndDate(pageable);
         model.addAttribute("callbackRequests", callbackRequests);
+
+        log.debug("Show operator callback list page");
         return "operator/callback/list";
     }
 
-//  ajax
     @PostMapping("/{id}/mark-done")
-    public String markDone(@PathVariable Long id) {
-        callbackRequestService.markAsDone(id);
-        return "redirect:/operator/callback";
+    @ResponseBody
+    public ResponseEntity<String> markDone(@PathVariable Long id) {
+        try {
+            callbackRequestService.markAsDone(id);
+            log.info("Mark operator callback done");
+            return ResponseEntity.ok("marked as done");
+        } catch (Exception e) {
+            log.error("Error marking callback as done for id: {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error");
+        }
     }
+
 
 }

@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.itis.fisd.semestrovka.entity.CallbackRequest;
+import ru.itis.fisd.semestrovka.entity.orm.CallbackRequest;
 import ru.itis.fisd.semestrovka.repository.CallbackRequestRepository;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

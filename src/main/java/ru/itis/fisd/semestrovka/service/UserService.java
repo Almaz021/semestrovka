@@ -1,14 +1,16 @@
 package ru.itis.fisd.semestrovka.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.itis.fisd.semestrovka.entity.User;
+import ru.itis.fisd.semestrovka.entity.orm.User;
+import ru.itis.fisd.semestrovka.exception.DuplicateUserException;
+import ru.itis.fisd.semestrovka.exception.UserNotFoundException;
 import ru.itis.fisd.semestrovka.repository.UserRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,8 +24,8 @@ public class UserService {
         return userRepository.findAll(pageable);
     }
 
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
     }
 
     public void updateRole(Long userId, String role) {
@@ -33,6 +35,10 @@ public class UserService {
     }
 
     public void save(User user) {
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new DuplicateUserException(user.getUsername());
+        }
     }
 }

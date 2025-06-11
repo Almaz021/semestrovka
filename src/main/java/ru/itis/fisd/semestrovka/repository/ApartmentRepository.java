@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.itis.fisd.semestrovka.entity.Apartment;
-import ru.itis.fisd.semestrovka.entity.User;
+import ru.itis.fisd.semestrovka.entity.orm.Apartment;
+import ru.itis.fisd.semestrovka.entity.orm.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +29,7 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
     @Query("SELECT a FROM Apartment a WHERE a.status = 'AVAILABLE' AND a.price BETWEEN :minPrice AND :maxPrice")
     Page<Apartment> findByAvailableAndPriceBetween(Integer minPrice, Integer maxPrice, Pageable pageable);
 
-    @Query("SELECT a FROM Apartment a JOIN a.favoriteBy u WHERE u = :user")
+    @Query("SELECT a FROM Apartment a JOIN a.favoriteBy u WHERE u = :user AND a.status = 'AVAILABLE'")
     Page<Apartment> findAllByFavoriteByUser(@Param("user") User user, Pageable pageable);
 
 }
