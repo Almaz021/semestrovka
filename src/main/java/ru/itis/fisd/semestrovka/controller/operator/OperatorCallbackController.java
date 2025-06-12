@@ -32,6 +32,8 @@ public class OperatorCallbackController {
 
         if (result.hasErrors()) {
             model.addAttribute("errors", result.getAllErrors());
+            log.info("There are validation errors in callback list request");
+            log.info("Errors: {}", result.getAllErrors());
             return "operator/callback/list";
         }
 

@@ -47,6 +47,8 @@ public class ViewingRequestController {
 
         if (result.hasErrors()) {
             model.addAttribute("errors", result.getAllErrors());
+            log.info("There are validation errors in viewing request list request");
+            log.info("Errors: {}", result.getAllErrors());
             return "appointments";
         }
 

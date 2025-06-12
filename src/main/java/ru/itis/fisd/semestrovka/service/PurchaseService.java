@@ -50,12 +50,6 @@ public class PurchaseService {
         purchaseRepository.save(purchase);
     }
 
-    public Page<Purchase> findAllByUser(User user, Pageable pageable) {
-        log.debug("Find all purchases by user with id {}", user.getId());
-        return purchaseRepository.findAllByUser(user, pageable);
-    }
-
-
     public Page<PurchaseDto> findAll(int page, int size) {
         log.debug("Find all purchases");
         Pageable pageable = PageRequest.of(page, size);
@@ -68,11 +62,13 @@ public class PurchaseService {
     }
 
     public Page<PurchaseDto> findAllByUsername(String username, Pageable pageable) {
+        log.debug("Find all purchases by username {}", username);
         User user = userService.findByUsername(username);
         return purchaseRepository.findAllByUser(user, pageable).map(purchaseMapper::toDto);
     }
 
     public PurchaseDto getUserPurchase(Long purchaseId, String username) {
+        log.debug("Get user purchase with id {}", purchaseId);
         Purchase purchase = findById(purchaseId);
         User user = userService.findByUsername(username);
 

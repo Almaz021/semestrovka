@@ -31,6 +31,8 @@ public class AdminPurchaseController {
 
         if (result.hasErrors()) {
             model.addAttribute("errors", result.getAllErrors());
+            log.info("There are validation errors in purchase list request");
+            log.info("Errors: {}", result.getAllErrors());
             return "admin/purchases/list";
         }
 

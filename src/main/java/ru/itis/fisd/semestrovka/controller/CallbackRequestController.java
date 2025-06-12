@@ -24,12 +24,9 @@ public class CallbackRequestController {
     public ResponseEntity<String> handleCallback(@Valid CallbackCreateRequest request,
                                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            String errorMsg = bindingResult.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .reduce((s1, s2) -> s1 + "; " + s2)
-                    .orElse("Invalid input");
-            log.warn("Callback request validation failed: {}", errorMsg);
-            return ResponseEntity.badRequest().body(errorMsg);
+            log.info("There are validation errors in callback create request request");
+            log.info("Errors: {}", bindingResult.getAllErrors());
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors().toString());
         }
 
         log.debug("Creating Callback Request with name {} and phone {}", request.getName(), request.getPhone());

@@ -31,6 +31,8 @@ public class AdminViewingRequestController {
 
         if (result.hasErrors()) {
             model.addAttribute("errors", result.getAllErrors());
+            log.info("There are validation errors in viewing requests list request");
+            log.info("Errors: {}", result.getAllErrors());
             return "admin/viewing-requests/list";
         }
 

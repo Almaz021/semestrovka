@@ -33,12 +33,9 @@ public class FavoritesController {
         log.info("Getting favorites");
 
         if (bindingResult.hasErrors()) {
-            String errorMsg = bindingResult.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .reduce((s1, s2) -> s1 + "; " + s2)
-                    .orElse("Invalid input");
-            log.warn("Favorites validation failed: {}", errorMsg);
-            return ResponseEntity.badRequest().body(errorMsg);
+            log.info("There are validation errors in favorites list request");
+            log.info("Errors: {}", bindingResult.getAllErrors());
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors().toString());
         }
 
         Page<ApartmentDto> favorites = userService.getFavorites(userDetails.getUsername(), requestDto.getPage(), requestDto.getSize());

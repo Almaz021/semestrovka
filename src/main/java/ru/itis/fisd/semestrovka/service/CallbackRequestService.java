@@ -24,8 +24,8 @@ public class CallbackRequestService {
     private final CallbackRequestMapper callbackRequestMapper;
 
     public Page<CallbackRequestDto> findAllByStatusAndDate(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
         log.debug("Find all order by status and date");
+        Pageable pageable = PageRequest.of(page, size);
         return callbackRequestRepository.findAllByStatusAndDate(pageable).map(callbackRequestMapper::toDto);
     }
 

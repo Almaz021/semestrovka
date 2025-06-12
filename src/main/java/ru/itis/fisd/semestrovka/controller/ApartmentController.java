@@ -37,6 +37,8 @@ public class ApartmentController {
 
         if (result.hasErrors()) {
             model.addAttribute("errors", result.getAllErrors());
+            log.info("There are validation errors in apartment filter list request");
+            log.info("Errors: {}", result.getAllErrors());
             return "apartments";
         }
 

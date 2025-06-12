@@ -77,6 +77,7 @@ public class UserService {
 
     @Transactional
     public void addApartmentToFavorites(String username, Long apartmentId) {
+        log.debug("Adding apartment to favorites with username = {} and apartment id = {}", username, apartmentId);
         User user = findByUsername(username);
         Apartment apartment = apartmentService.findByIdAvailable(apartmentId);
 
@@ -86,6 +87,7 @@ public class UserService {
 
     @Transactional
     public void removeApartmentFromFavorites(String username, Long apartmentId) {
+        log.debug("Remove apartment from favorites with username = {} and apartment id = {}", username, apartmentId);
         User user = findByUsername(username);
         Apartment apartment = apartmentService.findByIdAvailable(apartmentId);
 
@@ -94,17 +96,19 @@ public class UserService {
     }
 
     public Page<ApartmentDto> getFavorites(String username, int page, int size) {
+        log.debug("Get favorites for user with username = {}", username);
         User user = findByUsername(username);
         return apartmentService.findFavoritesByUser(user, PageRequest.of(page, size)).map(apartmentMapper::toDto);
     }
 
     public boolean isApartmentFavoriteForUser(UserDetails userDetails, ApartmentDto apartment) {
-        if (userDetails == null) return false;
+        log.debug("Check if apartment is favorite for user with username = {}, apartment with id = {}", userDetails.getUsername(), apartment.id());
         UserDto user = findDtoByUsername(userDetails.getUsername());
         return user.favoriteApartments().contains(apartment);
     }
 
     public void updateProfile(String currentUsername, ProfileEditRequest request) {
+        log.debug("Updating profile with username = {}", currentUsername);
         User user = findByUsername(currentUsername);
 
         if (request.username() != null && !request.username().isBlank()) {

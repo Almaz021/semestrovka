@@ -51,6 +51,8 @@ public class PurchaseController {
         if (bindingResult.hasErrors()) {
             ApartmentDto apartment = apartmentService.findDtoByIdAvailable(apartmentId);
             model.addAttribute("apartment", apartment);
+            log.info("There are validation errors in purchase request");
+            log.info("Errors: {}", bindingResult.getAllErrors());
             return "purchase_form";
         }
 

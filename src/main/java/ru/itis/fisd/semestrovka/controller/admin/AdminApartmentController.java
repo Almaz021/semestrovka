@@ -27,8 +27,11 @@ public class AdminApartmentController {
 
     @GetMapping
     public String list(@Valid ApartmentListRequest request, BindingResult result, Model model) {
+        log.debug("Prepare admin apartments list page");
         if (result.hasErrors()) {
             model.addAttribute("errors", result.getAllErrors());
+            log.info("There are validation errors in apartment list request");
+            log.info("Errors: {}", result.getAllErrors());
             return "admin/apartments/list";
         }
 
@@ -45,6 +48,8 @@ public class AdminApartmentController {
         model.addAttribute("sort", request.getSort());
         model.addAttribute("dir", request.getDir());
 
+        log.debug("Show admin apartments list page");
+
         return "admin/apartments/list";
     }
 
@@ -60,13 +65,17 @@ public class AdminApartmentController {
     public String save(@Valid @ModelAttribute("apartment") ApartmentFormRequest form,
                        BindingResult result,
                        Model model) {
+        log.debug("Prepare admin apartments save page");
         if (result.hasErrors()) {
             model.addAttribute("errors", result.getAllErrors());
+            log.info("There are validation errors in apartment save request");
+            log.info("Errors: {}", result.getAllErrors());
             return "admin/apartments/form";
         }
 
         Apartment entity = apartmentMapper.toEntity(form);
         apartmentService.save(entity);
+        log.debug("Show admin apartments save page");
         return "redirect:/admin/apartments";
     }
 
@@ -84,14 +93,18 @@ public class AdminApartmentController {
                          @Valid @ModelAttribute("apartment") ApartmentFormRequest form,
                          BindingResult result,
                          Model model) {
+        log.debug("Handle apartment update");
         if (result.hasErrors()) {
             model.addAttribute("errors", result.getAllErrors());
+            log.info("There are validation errors in apartment update request");
+            log.info("Errors: {}", result.getAllErrors());
             return "admin/apartments/form";
         }
 
         Apartment entity = apartmentMapper.toEntity(form);
         entity.setId(id);
         apartmentService.save(entity);
+        log.debug("Handled apartment update");
         return "redirect:/admin/apartments";
     }
 

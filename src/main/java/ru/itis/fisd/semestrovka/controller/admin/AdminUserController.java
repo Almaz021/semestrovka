@@ -30,6 +30,8 @@ public class AdminUserController {
 
         if (result.hasErrors()) {
             model.addAttribute("errors", result.getAllErrors());
+            log.info("There are validation errors in user list request");
+            log.info("Errors: {}", result.getAllErrors());
             return "admin/users/list";
         }
 

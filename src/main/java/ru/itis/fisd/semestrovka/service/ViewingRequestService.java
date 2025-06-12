@@ -32,11 +32,6 @@ public class ViewingRequestService {
     private final ApartmentService apartmentService;
     private final ViewingRequestMapper viewingRequestMapper;
 
-    public Page<ViewingRequest> findAllByUser(User user, Pageable pageable) {
-        log.debug("Finding all viewing requests by user with id = {}", user.getId());
-        return viewingRequestRepository.findAllByUser(user, pageable);
-    }
-
     public void save(User user, Apartment apartment, LocalDateTime preferredDateTime) {
         log.debug("Saving viewing request for user with id = {} and apartment with id = {} and datetime = {}", user.getId(), apartment.getId(), preferredDateTime);
 
@@ -103,15 +98,16 @@ public class ViewingRequestService {
     }
 
     public Page<ViewingRequestDto> findAllByUsername(String username, Pageable pageable) {
+        log.debug("Find all by username = {}", username);
         User user = userService.findByUsername(username);
         return viewingRequestRepository.findAllByUser(user, pageable).map(viewingRequestMapper::toDto);
     }
 
     public ViewingRequestFormDataResponse getViewingFormData(Long apartmentId) {
+        log.debug("Get viewing form data for apartment with id = {}", apartmentId);
         ApartmentDto apartment = apartmentService.findDtoById(apartmentId);
 
         List<LocalDateTime> availableSlots = getAvailableSlots(apartment);
-
 
         return new ViewingRequestFormDataResponse(apartment, availableSlots);
     }

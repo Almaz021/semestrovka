@@ -12,7 +12,6 @@ import ru.itis.fisd.semestrovka.entity.orm.Apartment;
 import ru.itis.fisd.semestrovka.entity.orm.User;
 import ru.itis.fisd.semestrovka.exception.ApartmentNotFoundException;
 import ru.itis.fisd.semestrovka.mapper.ApartmentMapper;
-import ru.itis.fisd.semestrovka.mapper.UserMapper;
 import ru.itis.fisd.semestrovka.repository.ApartmentRepository;
 
 @Service
@@ -37,6 +36,7 @@ public class ApartmentService {
     }
 
     public ApartmentDto findDtoByIdAvailable(Long id) {
+        log.debug("Finding available apartment dto by id {}", id);
         Apartment apartment = findByIdAvailable(id);
         return apartmentMapper.toDto(apartment);
     }
@@ -47,6 +47,7 @@ public class ApartmentService {
     }
 
     public ApartmentDto findDtoById(Long apartmentId) {
+        log.debug("Finding apartment dto by id {}", apartmentId);
         Apartment apartment = findById(apartmentId);
         return apartmentMapper.toDto(apartment);
     }
