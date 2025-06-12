@@ -19,7 +19,6 @@ import ru.itis.fisd.semestrovka.service.ApartmentService;
 @Controller
 @RequestMapping("/admin/apartments")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
 @Slf4j
 public class AdminApartmentController {
 

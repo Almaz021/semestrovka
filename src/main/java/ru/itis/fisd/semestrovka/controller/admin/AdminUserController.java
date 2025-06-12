@@ -16,7 +16,6 @@ import ru.itis.fisd.semestrovka.service.UserService;
 @Controller
 @RequestMapping("admin/users")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
 @Slf4j
 public class AdminUserController {
 

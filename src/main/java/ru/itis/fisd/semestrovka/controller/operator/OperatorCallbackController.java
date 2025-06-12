@@ -18,7 +18,6 @@ import ru.itis.fisd.semestrovka.service.CallbackRequestService;
 @Controller
 @RequestMapping("/operator/callback")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
 @Slf4j
 public class OperatorCallbackController {
 

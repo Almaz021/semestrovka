@@ -17,7 +17,6 @@ import ru.itis.fisd.semestrovka.service.ViewingRequestService;
 @Controller
 @RequestMapping("/admin/viewing-requests")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
 @Slf4j
 public class AdminViewingRequestController {
 

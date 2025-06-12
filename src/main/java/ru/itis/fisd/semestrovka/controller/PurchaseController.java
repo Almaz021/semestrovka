@@ -28,7 +28,6 @@ public class PurchaseController {
     private final PurchaseService purchaseService;
 
     @GetMapping("/{apartmentId}")
-    @PreAuthorize("isAuthenticated()")
     public String purchaseForm(@PathVariable Long apartmentId, Model model) {
 
         log.debug("Prepare purchase form page");
@@ -44,7 +43,6 @@ public class PurchaseController {
     }
 
     @PostMapping("/{apartmentId}")
-    @PreAuthorize("isAuthenticated()")
     public String confirmPurchase(@PathVariable Long apartmentId,
                                   @Valid @ModelAttribute("purchaseRequestDto") PurchaseRequest purchaseRequestDto,
                                   BindingResult bindingResult,
@@ -62,7 +60,6 @@ public class PurchaseController {
     }
 
     @GetMapping("/my")
-    @PreAuthorize("isAuthenticated()")
     public String purchasesPage(
             Model model,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -81,7 +78,6 @@ public class PurchaseController {
     }
 
     @GetMapping("/my/{purchaseId}")
-    @PreAuthorize("isAuthenticated()")
     public String viewMyPurchase(@PathVariable Long purchaseId,
                                  Model model,
                                  @AuthenticationPrincipal UserDetails userDetails) {

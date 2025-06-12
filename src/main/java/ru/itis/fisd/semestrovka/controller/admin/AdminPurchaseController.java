@@ -17,7 +17,6 @@ import ru.itis.fisd.semestrovka.service.PurchaseService;
 @Controller
 @RequestMapping("/admin/purchases")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
 @Slf4j
 public class AdminPurchaseController {
 

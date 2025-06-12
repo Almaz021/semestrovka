@@ -79,7 +79,6 @@ public class ApartmentController {
 
 
     @GetMapping("/my/{id}")
-    @PreAuthorize("isAuthenticated()")
     public String viewMyApartment(@PathVariable("id") Long id,
                                   Model model,
                                   @AuthenticationPrincipal UserDetails userDetails) {

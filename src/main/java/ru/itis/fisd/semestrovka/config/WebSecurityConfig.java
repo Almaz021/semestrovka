@@ -47,6 +47,7 @@ public class WebSecurityConfig {
                                 "/logout")
                         .permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/operator/**").hasAnyRole("ADMIN", "OPERATOR")
                         .anyRequest()
                         .authenticated())
                 .formLogin(formLogin -> formLogin

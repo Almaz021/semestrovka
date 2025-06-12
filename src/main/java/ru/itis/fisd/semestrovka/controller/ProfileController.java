@@ -23,7 +23,6 @@ public class ProfileController {
 
     private final UserService userService;
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public String profile(@AuthenticationPrincipal UserDetails userDetails, Model model) {
 
@@ -36,7 +35,6 @@ public class ProfileController {
         return "profile";
     }
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/edit")
     public String editProfileForm(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         log.debug("Prepare edit profile page");
