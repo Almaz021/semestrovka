@@ -8,15 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.itis.fisd.semestrovka.entity.dto.ApartmentDto;
-import ru.itis.fisd.semestrovka.entity.dto.UserDto;
 import ru.itis.fisd.semestrovka.entity.orm.Apartment;
 import ru.itis.fisd.semestrovka.entity.orm.User;
 import ru.itis.fisd.semestrovka.exception.ApartmentNotFoundException;
 import ru.itis.fisd.semestrovka.mapper.ApartmentMapper;
 import ru.itis.fisd.semestrovka.mapper.UserMapper;
 import ru.itis.fisd.semestrovka.repository.ApartmentRepository;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +22,6 @@ public class ApartmentService {
 
     private final ApartmentRepository apartmentRepository;
     private final ApartmentMapper apartmentMapper;
-    private final UserMapper userMapper;
 
     public Page<ApartmentDto> findAll(int page, int size, String sort, String dir) {
         log.debug("Finding all apartments");

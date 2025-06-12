@@ -15,7 +15,6 @@ import ru.itis.fisd.semestrovka.dto.response.ViewingRequestFormDataResponse;
 import ru.itis.fisd.semestrovka.entity.dto.ViewingRequestDto;
 import ru.itis.fisd.semestrovka.entity.orm.Apartment;
 import ru.itis.fisd.semestrovka.entity.orm.User;
-import ru.itis.fisd.semestrovka.entity.orm.ViewingRequest;
 import ru.itis.fisd.semestrovka.exception.UserDoubleBookingException;
 import ru.itis.fisd.semestrovka.service.ApartmentService;
 import ru.itis.fisd.semestrovka.service.UserService;

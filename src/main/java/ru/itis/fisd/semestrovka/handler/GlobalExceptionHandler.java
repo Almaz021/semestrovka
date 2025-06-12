@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ModelAndView handleNoResourceFoundException(NoResourceFoundException ex) {
+    public ModelAndView handleNoResourceFoundException() {
         return new ModelAndView("error/404");
     }
 

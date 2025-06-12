@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.fisd.semestrovka.entity.dto.CallbackRequestDto;
 import ru.itis.fisd.semestrovka.entity.orm.CallbackRequest;
 import ru.itis.fisd.semestrovka.service.CallbackRequestService;
 
@@ -28,7 +29,7 @@ public class OperatorCallbackController {
             @RequestParam(defaultValue = "10") int size
     ) {
         log.debug("Prepare operator callback list page");
-        Page<CallbackRequest> callbackRequests = callbackRequestService.findAllByStatusAndDate(page, size);
+        Page<CallbackRequestDto> callbackRequests = callbackRequestService.findAllByStatusAndDate(page, size);
         model.addAttribute("callbackRequests", callbackRequests);
 
         log.debug("Show operator callback list page");

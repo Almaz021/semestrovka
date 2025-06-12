@@ -7,8 +7,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.itis.fisd.semestrovka.entity.dto.CallbackRequestDto;
 import ru.itis.fisd.semestrovka.entity.orm.CallbackRequest;
 import ru.itis.fisd.semestrovka.exception.CallbackRequestNotFoundException;
+import ru.itis.fisd.semestrovka.mapper.CallbackRequestMapper;
 import ru.itis.fisd.semestrovka.repository.CallbackRequestRepository;
 
 import java.time.LocalDateTime;
@@ -19,11 +21,12 @@ import java.time.LocalDateTime;
 public class CallbackRequestService {
 
     private final CallbackRequestRepository callbackRequestRepository;
+    private final CallbackRequestMapper callbackRequestMapper;
 
-    public Page<CallbackRequest> findAllByStatusAndDate(Integer page, Integer size) {
+    public Page<CallbackRequestDto> findAllByStatusAndDate(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         log.debug("Find all order by status and date");
-        return callbackRequestRepository.findAllByStatusAndDate(pageable);
+        return callbackRequestRepository.findAllByStatusAndDate(pageable).map(callbackRequestMapper::toDto);
     }
 
     public void save(String name, String phone, String status, LocalDateTime date) {

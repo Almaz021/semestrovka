@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.itis.fisd.semestrovka.entity.dto.PurchaseDto;
-import ru.itis.fisd.semestrovka.entity.orm.Purchase;
 import ru.itis.fisd.semestrovka.service.PurchaseService;
 
 @Controller

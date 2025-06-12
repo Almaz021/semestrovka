@@ -2,14 +2,11 @@ package ru.itis.fisd.semestrovka.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.itis.fisd.semestrovka.dto.request.RegisterRequest;
-import ru.itis.fisd.semestrovka.entity.dto.UserDto;
-import ru.itis.fisd.semestrovka.entity.orm.User;
 import ru.itis.fisd.semestrovka.service.UserService;
 
 @Controller

@@ -12,9 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.fisd.semestrovka.entity.dto.ApartmentDto;
 import ru.itis.fisd.semestrovka.entity.dto.PurchaseDto;
-import ru.itis.fisd.semestrovka.entity.orm.Apartment;
-import ru.itis.fisd.semestrovka.entity.orm.Purchase;
-import ru.itis.fisd.semestrovka.entity.orm.User;
 import ru.itis.fisd.semestrovka.service.ApartmentService;
 import ru.itis.fisd.semestrovka.service.PurchaseService;
 import ru.itis.fisd.semestrovka.service.UserService;
@@ -26,7 +23,6 @@ import ru.itis.fisd.semestrovka.service.UserService;
 public class PurchaseController {
 
     private final ApartmentService apartmentService;
-    private final UserService userService;
     private final PurchaseService purchaseService;
 
     @GetMapping("/{apartmentId}")

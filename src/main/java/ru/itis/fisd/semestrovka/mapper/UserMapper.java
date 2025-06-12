@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.itis.fisd.semestrovka.entity.dto.ApartmentDto;
 import ru.itis.fisd.semestrovka.entity.dto.UserDto;
-import ru.itis.fisd.semestrovka.entity.orm.Apartment;
 import ru.itis.fisd.semestrovka.entity.orm.User;
 
 import java.util.Set;
@@ -30,15 +29,4 @@ public class UserMapper {
         );
     }
 
-    public User toEntity(UserDto dto, Set<Apartment> favoriteApartments, String passwordHash) {
-        if (dto == null) return null;
-
-        return User.builder()
-                .id(dto.id())
-                .username(dto.username())
-                .role(dto.role())
-                .passwordHash(passwordHash)
-                .favoriteApartments(favoriteApartments)
-                .build();
-    }
 }

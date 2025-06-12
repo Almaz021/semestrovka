@@ -7,7 +7,7 @@ import ru.itis.fisd.semestrovka.entity.orm.CallbackRequest;
 @Component
 public class CallbackRequestMapper {
 
-    public static CallbackRequestDto toDto(CallbackRequest entity) {
+    public CallbackRequestDto toDto(CallbackRequest entity) {
         if (entity == null) return null;
 
         return new CallbackRequestDto(
