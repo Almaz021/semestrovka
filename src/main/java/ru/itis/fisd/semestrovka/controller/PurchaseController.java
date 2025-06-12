@@ -17,7 +17,6 @@ import ru.itis.fisd.semestrovka.entity.dto.ApartmentDto;
 import ru.itis.fisd.semestrovka.entity.dto.PurchaseDto;
 import ru.itis.fisd.semestrovka.service.ApartmentService;
 import ru.itis.fisd.semestrovka.service.PurchaseService;
-import ru.itis.fisd.semestrovka.service.UserService;
 
 @Controller
 @RequestMapping("/purchase")
@@ -37,6 +36,8 @@ public class PurchaseController {
         ApartmentDto apartment = apartmentService.findDtoByIdAvailable(apartmentId);
 
         model.addAttribute("apartment", apartment);
+        model.addAttribute("purchaseRequestDto", new PurchaseRequest(""));
+
 
         log.debug("Show purchase form page");
         return "purchase_form";

@@ -7,7 +7,6 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itis.fisd.semestrovka.dto.request.CallbackCreateRequest;
 import ru.itis.fisd.semestrovka.service.CallbackRequestService;

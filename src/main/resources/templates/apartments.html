@@ -65,14 +65,6 @@
            th:href="@{/apartments(minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort}, page=${currentPage + 1}, size=10)}">Вперёд</a>
     </span>
     </div>
-
-    <style>
-        .current-page {
-            font-weight: bold;
-            text-decoration: underline;
-        }
-    </style>
-
 </section>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

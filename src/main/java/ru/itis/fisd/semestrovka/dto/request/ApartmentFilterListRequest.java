@@ -12,6 +12,7 @@ public class ApartmentFilterListRequest {
     @Min(value = 0, message = "Минимальная цена не может быть меньше 0")
     private Integer minPrice = 0;
 
+    @Min(value = 0, message = "Максимальная цена не может быть меньше 0")
     @Max(value = 1_000_000, message = "Максимальная цена слишком велика")
     private Integer maxPrice = 10000;
 

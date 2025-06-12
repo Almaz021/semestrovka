@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.fisd.semestrovka.dto.request.CallbackListRequest;
 import ru.itis.fisd.semestrovka.entity.dto.CallbackRequestDto;
-import ru.itis.fisd.semestrovka.entity.orm.CallbackRequest;
 import ru.itis.fisd.semestrovka.service.CallbackRequestService;
 
 @Controller
