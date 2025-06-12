@@ -1,9 +1,11 @@
 package ru.itis.fisd.semestrovka.handler;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import ru.itis.fisd.semestrovka.exception.*;
 
 @ControllerAdvice
@@ -14,9 +16,7 @@ public class GlobalExceptionHandler {
             ApartmentAlreadySoldException.class,
             ApartmentNotFoundException.class,
             CallbackRequestNotFoundException.class,
-            DuplicateUserException.class,
             PurchaseNotFoundException.class,
-            UserDoubleBookingException.class,
             UserNotFoundException.class,
             ViewingTimeConflictException.class,
             ViewingTimeOutOfBoundsException.class
@@ -27,6 +27,23 @@ public class GlobalExceptionHandler {
         ModelAndView mav = new ModelAndView("error/custom-error");
         mav.addObject("errorMessage", ex.getMessage());
         return mav;
+    }
+
+    @ExceptionHandler(DuplicateUserException.class)
+    public ModelAndView handleDuplicateUserException(DuplicateUserException ex) {
+        ModelAndView mav = new ModelAndView("/register");
+        mav.addObject("error", ex.getMessage());
+        return mav;
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ModelAndView handleAccessDenied() {
+        return new ModelAndView("error/403");
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ModelAndView handleNoResourceFoundException(NoResourceFoundException ex) {
+        return new ModelAndView("error/404");
     }
 
     @ExceptionHandler(Exception.class)

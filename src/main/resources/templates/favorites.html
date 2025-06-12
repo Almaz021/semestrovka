@@ -30,12 +30,12 @@
             const container = document.getElementById('favorites-container');
             container.innerHTML = '';
 
-            if (favorites.length === 0) {
+            if (favorites.content.length === 0) {
                 container.innerHTML = '<p>У вас пока нет избранных квартир.</p>';
                 return;
             }
 
-            favorites.forEach(apartment => {
+            favorites.content.forEach(apartment => {
                 const card = document.createElement('div');
                 card.className = 'apartment-card';
                 card.onclick = () => window.location.href = `/apartments/${apartment.id}`;

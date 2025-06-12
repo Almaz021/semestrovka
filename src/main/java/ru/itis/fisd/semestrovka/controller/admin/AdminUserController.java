@@ -7,7 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.itis.fisd.semestrovka.entity.orm.User;
+import ru.itis.fisd.semestrovka.entity.dto.UserDto;
 import ru.itis.fisd.semestrovka.service.UserService;
 
 @Controller
@@ -26,7 +26,7 @@ public class AdminUserController {
 
         log.debug("Prepare admin users list page");
 
-        Page<User> usersPage = userService.findAll(page, size);
+        Page<UserDto> usersPage = userService.findAll(page, size);
 
         model.addAttribute("users", usersPage.getContent());
         model.addAttribute("currentPage", page);

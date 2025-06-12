@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.itis.fisd.semestrovka.entity.orm.Apartment;
+import ru.itis.fisd.semestrovka.entity.dto.ApartmentDto;
+import ru.itis.fisd.semestrovka.entity.dto.UserDto;
 import ru.itis.fisd.semestrovka.entity.orm.User;
 import ru.itis.fisd.semestrovka.service.ApartmentService;
 import ru.itis.fisd.semestrovka.service.UserService;
@@ -36,7 +37,7 @@ public class ApartmentController {
 
         log.debug("Prepare apartments page");
 
-        Page<Apartment> apartmentsPage = apartmentService.findAvailableFiltered(minPrice, maxPrice, sort, page, size);
+        Page<ApartmentDto> apartmentsPage = apartmentService.findAvailableFiltered(minPrice, maxPrice, sort, page, size);
 
         model.addAttribute("apartments", apartmentsPage.getContent());
         model.addAttribute("sort", sort);
@@ -55,24 +56,17 @@ public class ApartmentController {
                                Model model,
                                @AuthenticationPrincipal UserDetails userDetails) {
         log.debug("Prepare apartment page with id = {}", id);
-        Apartment apartment = apartmentService.findByIdAvailable(id);
 
-//        if (apartmentOptional.isEmpty()) {
-//            return "redirect:/apartments";
-//        }
+        ApartmentDto apartment = apartmentService.findDtoByIdAvailable(id);
         model.addAttribute("apartment", apartment);
 
-        if (userDetails != null) {
-            User user = userService.findByUsername(userDetails.getUsername());
-            boolean isFavorite = user.getFavoriteApartments().contains(apartment);
-            model.addAttribute("isFavorite", isFavorite);
-        } else {
-            model.addAttribute("isFavorite", false);
-        }
+        boolean isFavorite = userService.isApartmentFavoriteForUser(userDetails, apartment);
+        model.addAttribute("isFavorite", isFavorite);
 
         log.debug("Show apartment page");
         return "apartment";
     }
+
 
     @GetMapping("/my/{id}")
     @PreAuthorize("isAuthenticated()")
@@ -89,7 +83,7 @@ public class ApartmentController {
             return "redirect:/home";
         }
 
-        Apartment apartment = apartmentService.findById(id);
+        ApartmentDto apartment = apartmentService.findDtoById(id);
         model.addAttribute("apartment", apartment);
 
         log.debug("Show purchased apartment");

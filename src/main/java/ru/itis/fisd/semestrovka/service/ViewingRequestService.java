@@ -6,12 +6,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.itis.fisd.semestrovka.dto.response.ViewingRequestFormDataResponse;
+import ru.itis.fisd.semestrovka.entity.dto.ApartmentDto;
+import ru.itis.fisd.semestrovka.entity.dto.ViewingRequestDto;
 import ru.itis.fisd.semestrovka.entity.orm.Apartment;
 import ru.itis.fisd.semestrovka.entity.orm.User;
 import ru.itis.fisd.semestrovka.entity.orm.ViewingRequest;
 import ru.itis.fisd.semestrovka.exception.UserDoubleBookingException;
 import ru.itis.fisd.semestrovka.exception.ViewingTimeConflictException;
 import ru.itis.fisd.semestrovka.exception.ViewingTimeOutOfBoundsException;
+import ru.itis.fisd.semestrovka.mapper.ViewingRequestMapper;
 import ru.itis.fisd.semestrovka.repository.ViewingRequestRepository;
 
 import java.time.LocalDateTime;
@@ -24,14 +28,24 @@ import java.util.List;
 public class ViewingRequestService {
 
     private final ViewingRequestRepository viewingRequestRepository;
+    private final UserService userService;
+    private final ApartmentService apartmentService;
+    private final ViewingRequestMapper viewingRequestMapper;
 
     public Page<ViewingRequest> findAllByUser(User user, Pageable pageable) {
         log.debug("Finding all viewing requests by user with id = {}", user.getId());
         return viewingRequestRepository.findAllByUser(user, pageable);
     }
 
-    public void save(ViewingRequest request) {
-        log.debug("Saving viewing request with id = {}", request.getId());
+    public void save(User user, Apartment apartment, LocalDateTime preferredDateTime) {
+        log.debug("Saving viewing request for user with id = {} and apartment with id = {} and datetime = {}", user.getId(), apartment.getId(), preferredDateTime);
+
+        ViewingRequest request = ViewingRequest.builder()
+                .user(user)
+                .apartment(apartment)
+                .preferredDateTime(preferredDateTime)
+                .build();
+
         LocalDateTime time = request.getPreferredDateTime();
 
         int hour = time.getHour();
@@ -59,14 +73,14 @@ public class ViewingRequestService {
     }
 
 
-    public Page<ViewingRequest> findAll(int page, int size) {
+    public Page<ViewingRequestDto> findAll(int page, int size) {
         log.debug("Finding all viewing requests");
         Pageable pageable = PageRequest.of(page, size);
-        return viewingRequestRepository.findAll(pageable);
+        return viewingRequestRepository.findAll(pageable).map(viewingRequestMapper::toDto);
     }
 
-    public List<LocalDateTime> getAvailableSlots(Apartment apartment) {
-        log.debug("Get available slots of apartment {} for viewing request", apartment.getId());
+    public List<LocalDateTime> getAvailableSlots(ApartmentDto apartment) {
+        log.debug("Get available slots of apartment {} for viewing request", apartment.id());
         List<LocalDateTime> slots = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endDate = now.plusDays(7);
@@ -76,7 +90,7 @@ public class ViewingRequestService {
             if (hour >= 8 && hour <= 17) {
                 LocalDateTime slotEnd = now.plusHours(1);
                 boolean hasConflict = !viewingRequestRepository
-                        .findConflictingRequests(apartment.getId(), now, slotEnd)
+                        .findConflictingRequests(apartment.id(), now, slotEnd)
                         .isEmpty();
                 if (!hasConflict) {
                     slots.add(now);
@@ -86,6 +100,20 @@ public class ViewingRequestService {
         }
 
         return slots;
+    }
+
+    public Page<ViewingRequestDto> findAllByUsername(String username, Pageable pageable) {
+        User user = userService.findByUsername(username);
+        return viewingRequestRepository.findAllByUser(user, pageable).map(viewingRequestMapper::toDto);
+    }
+
+    public ViewingRequestFormDataResponse getViewingFormData(Long apartmentId) {
+        ApartmentDto apartment = apartmentService.findDtoById(apartmentId);
+
+        List<LocalDateTime> availableSlots = getAvailableSlots(apartment);
+
+
+        return new ViewingRequestFormDataResponse(apartment, availableSlots);
     }
 
 }

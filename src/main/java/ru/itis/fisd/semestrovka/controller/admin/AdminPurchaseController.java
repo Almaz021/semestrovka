@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.itis.fisd.semestrovka.entity.dto.PurchaseDto;
 import ru.itis.fisd.semestrovka.entity.orm.Purchase;
 import ru.itis.fisd.semestrovka.service.PurchaseService;
 
@@ -28,7 +29,7 @@ public class AdminPurchaseController {
 
         log.debug("Prepare admin purchases list page");
 
-        Page<Purchase> purchasesPage = purchaseService.findAll(page, size);
+        Page<PurchaseDto> purchasesPage = purchaseService.findAll(page, size);
 
         model.addAttribute("purchases", purchasesPage.getContent());
         model.addAttribute("currentPage", page);
@@ -39,5 +40,4 @@ public class AdminPurchaseController {
 
         return "admin/purchases/list";
     }
-
 }

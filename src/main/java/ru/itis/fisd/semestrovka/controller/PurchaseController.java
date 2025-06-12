@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.fisd.semestrovka.entity.dto.ApartmentDto;
+import ru.itis.fisd.semestrovka.entity.dto.PurchaseDto;
 import ru.itis.fisd.semestrovka.entity.orm.Apartment;
 import ru.itis.fisd.semestrovka.entity.orm.Purchase;
 import ru.itis.fisd.semestrovka.entity.orm.User;
@@ -33,7 +35,7 @@ public class PurchaseController {
 
         log.debug("Prepare purchase form page");
 
-        Apartment apartment = apartmentService.findByIdAvailable(apartmentId);
+        ApartmentDto apartment = apartmentService.findDtoByIdAvailable(apartmentId);
 
         model.addAttribute("apartment", apartment);
 
@@ -48,10 +50,7 @@ public class PurchaseController {
                                   @AuthenticationPrincipal UserDetails userDetails) {
         log.debug("Handling confirm purchase form");
 
-        User user = userService.findByUsername(userDetails.getUsername());
-        Apartment apartment = apartmentService.findByIdAvailable(apartmentId);
-
-        purchaseService.purchaseApartment(user, apartment, comment);
+        purchaseService.purchaseApartment(userDetails.getUsername(), apartmentId, comment);
 
         log.debug("Handled confirm purchase form");
 
@@ -68,9 +67,8 @@ public class PurchaseController {
 
         log.debug("Prepare user purchases page");
 
-        User user = userService.findByUsername(userDetails.getUsername());
-
-        Page<Purchase> purchasesPage = purchaseService.findAllByUser(user, PageRequest.of(page, size));
+        Page<PurchaseDto> purchasesPage = purchaseService.findAllByUsername(
+                userDetails.getUsername(), PageRequest.of(page, size));
 
         model.addAttribute("purchasesPage", purchasesPage);
 
@@ -83,22 +81,15 @@ public class PurchaseController {
     public String viewMyPurchase(@PathVariable Long purchaseId,
                                  Model model,
                                  @AuthenticationPrincipal UserDetails userDetails) {
-        log.debug("Handling users purchase page");
+        log.debug("Handling user's purchase page");
 
-        User user = userService.findByUsername(userDetails.getUsername());
-        Purchase purchase = purchaseService.findById(purchaseId);
-
-        if (!purchase.getUser().getId().equals(user.getId())) {
-            log.warn("Purchase is not owned by user");
-            return "error/403";
-        }
+        PurchaseDto purchase = purchaseService.getUserPurchase(purchaseId, userDetails.getUsername());
+        ApartmentDto apartment = apartmentService.findDtoById(purchase.apartment().id());
 
         model.addAttribute("purchase", purchase);
-        model.addAttribute("apartment", purchase.getApartment());
+        model.addAttribute("apartment", apartment);
 
         log.debug("Show user purchase page");
         return "apartment";
     }
-
-
 }

@@ -3,19 +3,14 @@ package ru.itis.fisd.semestrovka.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import ru.itis.fisd.semestrovka.dto.ApartmentDto;
-import ru.itis.fisd.semestrovka.entity.orm.Apartment;
-import ru.itis.fisd.semestrovka.entity.orm.User;
-import ru.itis.fisd.semestrovka.service.ApartmentService;
+import ru.itis.fisd.semestrovka.dto.response.PageResponse;
+import ru.itis.fisd.semestrovka.entity.dto.ApartmentDto;
+import ru.itis.fisd.semestrovka.mapper.PageMapper;
 import ru.itis.fisd.semestrovka.service.UserService;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/favorites")
@@ -24,7 +19,7 @@ import java.util.stream.Collectors;
 public class FavoritesController {
 
     private final UserService userService;
-    private final ApartmentService apartmentService;
+    private final PageMapper pageMapper;
 
     @GetMapping
     public ResponseEntity<?> getFavorites(@AuthenticationPrincipal UserDetails userDetails,
@@ -33,28 +28,22 @@ public class FavoritesController {
 
         log.info("Getting favorites");
 
-        User user = userService.findByUsername(userDetails.getUsername());
+        Page<ApartmentDto> favorites = userService.getFavorites(userDetails.getUsername(), page, size);
 
-        Page<Apartment> favorites = apartmentService.findFavoritesByUser(user, PageRequest.of(page, size));
+        log.info("Found {} favorites", favorites.getTotalElements());
 
-        List<ApartmentDto> apartmentDtos = favorites.getContent().stream()
-                .map(ApartmentDto::from)
-                .collect(Collectors.toList());
+        PageResponse<ApartmentDto> response = pageMapper.toPageResponse(favorites);
 
-        log.info("Found {} favorites", apartmentDtos.size());
-
-        return ResponseEntity.ok().body(apartmentDtos);
+        return ResponseEntity.ok(response);
     }
+
 
     @PostMapping("/{id}")
     public ResponseEntity<?> addToFavorites(@AuthenticationPrincipal UserDetails userDetails,
                                             @PathVariable Long id) {
         log.info("Adding to favorites");
-        User user = userService.findByUsername(userDetails.getUsername());
-        Apartment apartment = apartmentService.findByIdAvailable(id);
 
-        user.getFavoriteApartments().add(apartment);
-        userService.save(user);
+        userService.addApartmentToFavorites(userDetails.getUsername(), id);
 
         log.info("Added to favorites");
 
@@ -66,14 +55,9 @@ public class FavoritesController {
                                                  @PathVariable Long id) {
         log.info("Removing from favorites");
 
-        User user = userService.findByUsername(userDetails.getUsername());
-        Apartment apartment = apartmentService.findByIdAvailable(id);
-
-        user.getFavoriteApartments().remove(apartment);
-        userService.save(user);
+        userService.removeApartmentFromFavorites(userDetails.getUsername(), id);
 
         log.info("Removed from favorites");
-
         return ResponseEntity.noContent().build();
     }
 }

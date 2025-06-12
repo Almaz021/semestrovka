@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.itis.fisd.semestrovka.entity.orm.ViewingRequest;
+import ru.itis.fisd.semestrovka.entity.dto.ViewingRequestDto;
 import ru.itis.fisd.semestrovka.service.ViewingRequestService;
 
 @Controller
@@ -28,7 +28,7 @@ public class AdminViewingRequestController {
 
         log.debug("Prepare admin viewing requests list page");
 
-        Page<ViewingRequest> requestsPage = viewingRequestService.findAll(page, size);
+        Page<ViewingRequestDto> requestsPage = viewingRequestService.findAll(page, size);
 
         model.addAttribute("viewingRequests", requestsPage.getContent());
         model.addAttribute("currentPage", page);

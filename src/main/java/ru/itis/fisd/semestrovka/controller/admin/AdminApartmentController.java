@@ -7,7 +7,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.fisd.semestrovka.entity.dto.ApartmentDto;
 import ru.itis.fisd.semestrovka.entity.orm.Apartment;
+import ru.itis.fisd.semestrovka.mapper.ApartmentMapper;
 import ru.itis.fisd.semestrovka.service.ApartmentService;
 
 @Controller
@@ -18,6 +20,7 @@ import ru.itis.fisd.semestrovka.service.ApartmentService;
 public class AdminApartmentController {
 
     private final ApartmentService apartmentService;
+    private final ApartmentMapper apartmentMapper;
 
     @GetMapping
     public String list(Model model,
@@ -28,7 +31,7 @@ public class AdminApartmentController {
 
         log.debug("Prepare admin apartments list page");
 
-        Page<Apartment> apartmentsPage = apartmentService.findAll(page, size, sort, dir);
+        Page<ApartmentDto> apartmentsPage = apartmentService.findAll(page, size, sort, dir);
 
         model.addAttribute("apartments", apartmentsPage.getContent());
         model.addAttribute("currentPage", page);
@@ -51,8 +54,8 @@ public class AdminApartmentController {
     }
 
     @PostMapping
-    public String save(@ModelAttribute Apartment apartment) {
-        apartmentService.save(apartment);
+    public String save(@ModelAttribute ApartmentDto apartment) {
+        apartmentService.save(apartmentMapper.toEntity(apartment));
         log.debug("Handle save apartment request");
         return "redirect:/admin/apartments";
     }
@@ -60,17 +63,18 @@ public class AdminApartmentController {
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, Model model) {
         log.debug("Prepare admin edit apartments form");
-        Apartment apartment = apartmentService.findById(id);
+        ApartmentDto apartment = apartmentService.findDtoById(id);
         model.addAttribute("apartment", apartment);
         log.debug("Show admin edit apartments form");
         return "admin/apartments/form";
     }
 
     @PostMapping("/edit/{id}")
-    public String update(@PathVariable Long id, @ModelAttribute Apartment apartment) {
+    public String update(@PathVariable Long id, @ModelAttribute ApartmentDto apartment) {
         log.debug("Handle admin edit apartments form");
-        apartment.setId(id);
-        apartmentService.save(apartment);
+        Apartment updated = apartmentMapper.toEntity(apartment);
+        updated.setId(id);
+        apartmentService.save(updated);
         return "redirect:/admin/apartments";
     }
 

@@ -25,13 +25,7 @@ public class CallbackRequestController {
 
         log.debug("Creating Callback Request with name {} and phone {}", name, phone);
 
-        CallbackRequest callbackRequest = CallbackRequest.builder()
-                .name(name)
-                .phone(phone)
-                .status("NEW")
-                .requestedAt(LocalDateTime.now()).build();
-
-        callbackRequestService.save(callbackRequest);
+        callbackRequestService.save(name, phone, "NEW", LocalDateTime.now());
 
         log.debug("Callback Request successfully created");
         return ResponseEntity.ok().build();

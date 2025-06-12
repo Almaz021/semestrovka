@@ -3,8 +3,6 @@ package ru.itis.fisd.semestrovka.controller.operator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,8 +28,7 @@ public class OperatorCallbackController {
             @RequestParam(defaultValue = "10") int size
     ) {
         log.debug("Prepare operator callback list page");
-        Pageable pageable = PageRequest.of(page, size);
-        Page<CallbackRequest> callbackRequests = callbackRequestService.findAllByStatusAndDate(pageable);
+        Page<CallbackRequest> callbackRequests = callbackRequestService.findAllByStatusAndDate(page, size);
         model.addAttribute("callbackRequests", callbackRequests);
 
         log.debug("Show operator callback list page");
@@ -50,6 +47,4 @@ public class OperatorCallbackController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error");
         }
     }
-
-
 }

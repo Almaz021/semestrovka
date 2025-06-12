@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.itis.fisd.semestrovka.dto.request.RegisterRequest;
+import ru.itis.fisd.semestrovka.entity.dto.UserDto;
 import ru.itis.fisd.semestrovka.entity.orm.User;
 import ru.itis.fisd.semestrovka.service.UserService;
 
@@ -17,7 +18,6 @@ import ru.itis.fisd.semestrovka.service.UserService;
 public class AuthController {
 
     private final UserService userService;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
     public String login() {
@@ -35,17 +35,12 @@ public class AuthController {
     public String register(@ModelAttribute RegisterRequest request) {
         log.debug("Registering user");
 
-        User user = User.builder()
-                .username(request.username())
-                .passwordHash(passwordEncoder.encode(request.password()))
-                .role("USER")
-                .build();
-
-        userService.save(user);
+        userService.save(request.username(), request.password());
 
         log.debug("User registered successfully");
         return "redirect:/login";
     }
+
 
     @GetMapping("/access-denied")
     public String accessDenied() {
