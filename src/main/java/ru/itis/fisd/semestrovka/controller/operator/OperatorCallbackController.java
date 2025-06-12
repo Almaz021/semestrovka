@@ -31,7 +31,7 @@ public class OperatorCallbackController {
     ) {
         log.debug("Prepare operator callback list page");
         Pageable pageable = PageRequest.of(page, size);
-        Page<CallbackRequest> callbackRequests = callbackRequestService.findAllOrderByStatusAndDate(pageable);
+        Page<CallbackRequest> callbackRequests = callbackRequestService.findAllByStatusAndDate(pageable);
         model.addAttribute("callbackRequests", callbackRequests);
 
         log.debug("Show operator callback list page");

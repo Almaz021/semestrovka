@@ -1,6 +1,7 @@
 package ru.itis.fisd.semestrovka.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,42 +16,51 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ApartmentService {
 
     private final ApartmentRepository apartmentRepository;
 
     public Page<Apartment> findAll(int page, int size, String sort, String dir) {
+        log.debug("Finding all apartments");
+
         Sort.Direction direction = "desc".equalsIgnoreCase(dir) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort));
         return apartmentRepository.findAll(pageable);
     }
 
     public Apartment findByIdAvailable(Long id) {
+        log.debug("Finding available apartment by id {}", id);
         return apartmentRepository.findByIdAndStatusAvailable(id).orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
     public Apartment findById(Long apartmentId) {
+        log.debug("Finding apartment by id {}", apartmentId);
         return apartmentRepository.findById(apartmentId).orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
     }
 
     public void save(Apartment apartment) {
+        log.debug("Saving apartment {}", apartment);
         apartmentRepository.save(apartment);
     }
 
     public boolean hasUserPurchasedApartment(Long apartmentId, User user) {
+        log.debug("Checking if user with id {} purchased apartment with id {}", user.getId(), apartmentId);
         return apartmentRepository.hasUserPurchasedApartment(apartmentId, user);
     }
 
     public void deleteById(Long id) {
+        log.debug("Deleting apartment with id {}", id);
         apartmentRepository.deleteById(id);
     }
 
     public Page<Apartment> findAvailableFiltered(Integer minPrice, Integer maxPrice, String sort, int page, int size) {
+        log.debug("Finding available apartments with minPrice: {} and maxPrice: {} and sorting: {}", minPrice, maxPrice, sort);
         Sort sorting = Sort.unsorted();
 
-        if ("price_asc".equals(sort)) {
+        if ("asc".equals(sort)) {
             sorting = Sort.by(Sort.Direction.ASC, "price");
-        } else if ("price_desc".equals(sort)) {
+        } else if ("desc".equals(sort)) {
             sorting = Sort.by(Sort.Direction.DESC, "price");
         }
 
@@ -59,6 +69,7 @@ public class ApartmentService {
     }
 
     public Page<Apartment> findFavoritesByUser(User user, Pageable pageable) {
+        log.debug("Finding favorites apartment with user id {}", user.getId());
         return apartmentRepository.findAllByFavoriteByUser(user, pageable);
     }
 }

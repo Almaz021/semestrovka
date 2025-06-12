@@ -83,8 +83,12 @@ public class WebSecurityConfig {
                 log.info("Unauthorized access with X-Requested-With: {}", request.getHeader("X-Requested-With"));
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             } else {
-                log.info("Unauthorized access: {}", authException.getMessage());
-                response.sendRedirect("/login");
+                if (!request.getRequestURI().startsWith("/favicon") &&
+                    !request.getRequestURI().startsWith("/js") &&
+                    !request.getRequestURI().startsWith("/css")) {
+                    log.info("Unauthorized access to {}", request.getRequestURI());
+                    response.sendRedirect("/login");
+                }
             }
         };
     }
