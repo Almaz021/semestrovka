@@ -1,12 +1,16 @@
 package ru.itis.fisd.semestrovka.controller.admin;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.fisd.semestrovka.dto.request.ApartmentFormRequest;
+import ru.itis.fisd.semestrovka.dto.request.ApartmentListRequest;
 import ru.itis.fisd.semestrovka.entity.dto.ApartmentDto;
 import ru.itis.fisd.semestrovka.entity.orm.Apartment;
 import ru.itis.fisd.semestrovka.mapper.ApartmentMapper;
@@ -23,24 +27,24 @@ public class AdminApartmentController {
     private final ApartmentMapper apartmentMapper;
 
     @GetMapping
-    public String list(Model model,
-                       @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-                       @RequestParam(value = "size", required = false, defaultValue = "10") int size,
-                       @RequestParam(value = "sort", required = false, defaultValue = "id") String sort,
-                       @RequestParam(value = "dir", required = false, defaultValue = "asc") String dir) {
+    public String list(@Valid ApartmentListRequest request, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("errors", result.getAllErrors());
+            return "admin/apartments/list";
+        }
 
-        log.debug("Prepare admin apartments list page");
-
-        Page<ApartmentDto> apartmentsPage = apartmentService.findAll(page, size, sort, dir);
+        Page<ApartmentDto> apartmentsPage = apartmentService.findAll(
+                request.getPage(),
+                request.getSize(),
+                request.getSort(),
+                request.getDir());
 
         model.addAttribute("apartments", apartmentsPage.getContent());
-        model.addAttribute("currentPage", page);
+        model.addAttribute("currentPage", request.getPage());
         model.addAttribute("totalPages", apartmentsPage.getTotalPages());
-        model.addAttribute("size", size);
-        model.addAttribute("sort", sort);
-        model.addAttribute("dir", dir);
-
-        log.debug("Show admin apartments list page");
+        model.addAttribute("size", request.getSize());
+        model.addAttribute("sort", request.getSort());
+        model.addAttribute("dir", request.getDir());
 
         return "admin/apartments/list";
     }
@@ -54,9 +58,16 @@ public class AdminApartmentController {
     }
 
     @PostMapping
-    public String save(@ModelAttribute ApartmentDto apartment) {
-        apartmentService.save(apartmentMapper.toEntity(apartment));
-        log.debug("Handle save apartment request");
+    public String save(@Valid @ModelAttribute("apartment") ApartmentFormRequest form,
+                       BindingResult result,
+                       Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("errors", result.getAllErrors());
+            return "admin/apartments/form";
+        }
+
+        Apartment entity = apartmentMapper.toEntity(form);
+        apartmentService.save(entity);
         return "redirect:/admin/apartments";
     }
 
@@ -70,11 +81,18 @@ public class AdminApartmentController {
     }
 
     @PostMapping("/edit/{id}")
-    public String update(@PathVariable Long id, @ModelAttribute ApartmentDto apartment) {
-        log.debug("Handle admin edit apartments form");
-        Apartment updated = apartmentMapper.toEntity(apartment);
-        updated.setId(id);
-        apartmentService.save(updated);
+    public String update(@PathVariable Long id,
+                         @Valid @ModelAttribute("apartment") ApartmentFormRequest form,
+                         BindingResult result,
+                         Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("errors", result.getAllErrors());
+            return "admin/apartments/form";
+        }
+
+        Apartment entity = apartmentMapper.toEntity(form);
+        entity.setId(id);
+        apartmentService.save(entity);
         return "redirect:/admin/apartments";
     }
 

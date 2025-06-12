@@ -1,5 +1,6 @@
 package ru.itis.fisd.semestrovka.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -8,10 +9,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.itis.fisd.semestrovka.dto.request.ApartmentFilterListRequest;
 import ru.itis.fisd.semestrovka.entity.dto.ApartmentDto;
 import ru.itis.fisd.semestrovka.entity.orm.User;
 import ru.itis.fisd.semestrovka.service.ApartmentService;
@@ -27,27 +30,36 @@ public class ApartmentController {
     private final UserService userService;
 
     @GetMapping
-    public String apartments(Model model,
-                             @RequestParam(value = "minPrice", required = false, defaultValue = "0") Integer minPrice,
-                             @RequestParam(value = "maxPrice", required = false, defaultValue = "10000") Integer maxPrice,
-                             @RequestParam(value = "sort", required = false, defaultValue = "asc") String sort,
-                             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-                             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+    public String apartments(@Valid ApartmentFilterListRequest request,
+                             BindingResult result,
+                             Model model) {
 
         log.debug("Prepare apartments page");
 
-        Page<ApartmentDto> apartmentsPage = apartmentService.findAvailableFiltered(minPrice, maxPrice, sort, page, size);
+        if (result.hasErrors()) {
+            model.addAttribute("errors", result.getAllErrors());
+            return "apartments";
+        }
+
+        Page<ApartmentDto> apartmentsPage = apartmentService.findAvailableFiltered(
+                request.getMinPrice(),
+                request.getMaxPrice(),
+                request.getSort(),
+                request.getPage(),
+                request.getSize()
+        );
 
         model.addAttribute("apartments", apartmentsPage.getContent());
-        model.addAttribute("sort", sort);
-        model.addAttribute("minPrice", minPrice);
-        model.addAttribute("maxPrice", maxPrice);
-        model.addAttribute("currentPage", page);
+        model.addAttribute("sort", request.getSort());
+        model.addAttribute("minPrice", request.getMinPrice());
+        model.addAttribute("maxPrice", request.getMaxPrice());
+        model.addAttribute("currentPage", request.getPage());
         model.addAttribute("totalPages", apartmentsPage.getTotalPages());
 
         log.debug("Show apartments page");
         return "apartments";
     }
+
 
 
     @GetMapping("/{id}")

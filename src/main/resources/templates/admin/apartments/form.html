@@ -9,6 +9,12 @@
 
 <div th:replace="~{fragments/header :: header}"></div>
 
+<div th:if="${errors != null and !#lists.isEmpty(errors)}" class="validation-errors" style="color:red;">
+    <ul>
+        <li th:each="error : ${errors}" th:text="${error.defaultMessage}">Ошибка</li>
+    </ul>
+</div>
+
 <section>
     <h1 th:text="${apartment.id == null ? 'Добавить новую квартиру' : 'Редактировать квартиру'}">Форма квартиры</h1>
 

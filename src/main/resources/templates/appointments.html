@@ -12,6 +12,12 @@
 <section>
     <h2>История заявок на просмотр</h2>
 
+    <div th:if="${errors != null and !#lists.isEmpty(errors)}" class="validation-errors" style="color:red;">
+        <ul>
+            <li th:each="error : ${errors}" th:text="${error.defaultMessage}">Ошибка</li>
+        </ul>
+    </div>
+
     <div th:if="${requests.isEmpty()}">
         <p>У вас пока нет записей на просмотры.</p>
     </div>

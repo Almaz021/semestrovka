@@ -11,6 +11,12 @@
 <section>
     <h1>Список квартир</h1>
 
+    <div th:if="${errors != null and !#lists.isEmpty(errors)}" class="validation-errors" style="color:red;">
+        <ul>
+            <li th:each="error : ${errors}" th:text="${error.defaultMessage}">Ошибка</li>
+        </ul>
+    </div>
+
     <div class="filter-bar">
         <form th:action="@{/apartments}" method="get">
             <label>Мин. цена:

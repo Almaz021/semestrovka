@@ -1,6 +1,7 @@
 package ru.itis.fisd.semestrovka.mapper;
 
 import org.springframework.stereotype.Component;
+import ru.itis.fisd.semestrovka.dto.request.ApartmentFormRequest;
 import ru.itis.fisd.semestrovka.entity.dto.ApartmentDto;
 import ru.itis.fisd.semestrovka.entity.orm.Apartment;
 
@@ -23,19 +24,18 @@ public class ApartmentMapper {
         );
     }
 
-    public Apartment toEntity(ApartmentDto dto) {
-        if (dto == null) return null;
+    public Apartment toEntity(ApartmentFormRequest request) {
+        if (request == null) return null;
 
         return Apartment.builder()
-                .id(dto.id())
-                .title(dto.title())
-                .description(dto.description())
-                .address(dto.address())
-                .price(dto.price())
-                .rooms(dto.rooms())
-                .area(dto.area())
-                .floor(dto.floor())
-                .status(dto.status())
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .address(request.getAddress())
+                .price(request.getPrice())
+                .rooms(request.getRooms())
+                .area(request.getArea())
+                .floor(request.getFloor())
+                .status(request.getStatus())
                 .build();
     }
 }

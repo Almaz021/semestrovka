@@ -1,5 +1,6 @@
 package ru.itis.fisd.semestrovka.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -9,8 +10,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.itis.fisd.semestrovka.dto.request.ViewingRequestListRequest;
 import ru.itis.fisd.semestrovka.dto.response.ViewingRequestFormDataResponse;
 import ru.itis.fisd.semestrovka.entity.dto.ViewingRequestDto;
 import ru.itis.fisd.semestrovka.entity.orm.Apartment;
@@ -37,13 +40,18 @@ public class ViewingRequestController {
     public String appointments(
             Model model,
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @Valid ViewingRequestListRequest request,
+            BindingResult result) {
 
         log.debug("Prepare appointments page");
 
+        if (result.hasErrors()) {
+            model.addAttribute("errors", result.getAllErrors());
+            return "appointments";
+        }
+
         Page<ViewingRequestDto> requestsPage = viewingRequestService.findAllByUsername(
-                userDetails.getUsername(), PageRequest.of(page, size)
+                userDetails.getUsername(), PageRequest.of(request.getPage(), request.getSize())
         );
 
         model.addAttribute("requests", requestsPage);

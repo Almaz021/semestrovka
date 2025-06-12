@@ -21,11 +21,16 @@
         <p><strong>Площадь:</strong> <span th:text="${apartment.area}"></span> кв.м</p>
     </div>
 
-    <form th:action="@{'/purchase/' + ${apartment.id}}" method="post">
-        <label for="comment">Комментарий к покупке (необязательно):</label><br/>
-        <textarea id="comment" name="comment" rows="4" cols="50"></textarea><br/><br/>
+    <form th:action="@{'/purchase/' + ${apartment.id}}" th:object="${purchaseRequestDto}" method="post">
+
+        <label for="email">Email:</label><br/>
+        <input type="text" id="email" th:field="*{email}" />
+        <div th:if="${#fields.hasErrors('email')}" style="color: red;" th:errors="*{email}">Ошибка</div>
+
+
         <button type="submit">Подтвердить покупку</button>
     </form>
+
 </section>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

@@ -9,6 +9,12 @@
 
 <h2>Пользователи</h2>
 
+<div th:if="${errors != null and !#lists.isEmpty(errors)}" class="validation-errors" style="color:red;">
+    <ul>
+        <li th:each="error : ${errors}" th:text="${error.defaultMessage}">Ошибка</li>
+    </ul>
+</div>
+
 <table border="1">
     <thead>
     <tr>

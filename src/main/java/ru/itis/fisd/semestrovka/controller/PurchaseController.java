@@ -1,5 +1,6 @@
 package ru.itis.fisd.semestrovka.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -9,7 +10,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.fisd.semestrovka.dto.request.PurchaseRequest;
 import ru.itis.fisd.semestrovka.entity.dto.ApartmentDto;
 import ru.itis.fisd.semestrovka.entity.dto.PurchaseDto;
 import ru.itis.fisd.semestrovka.service.ApartmentService;
@@ -42,13 +45,17 @@ public class PurchaseController {
     @PostMapping("/{apartmentId}")
     @PreAuthorize("isAuthenticated()")
     public String confirmPurchase(@PathVariable Long apartmentId,
-                                  @RequestParam(required = false) String comment,
-                                  @AuthenticationPrincipal UserDetails userDetails) {
-        log.debug("Handling confirm purchase form");
+                                  @Valid @ModelAttribute("purchaseRequestDto") PurchaseRequest purchaseRequestDto,
+                                  BindingResult bindingResult,
+                                  @AuthenticationPrincipal UserDetails userDetails,
+                                  Model model) {
+        if (bindingResult.hasErrors()) {
+            ApartmentDto apartment = apartmentService.findDtoByIdAvailable(apartmentId);
+            model.addAttribute("apartment", apartment);
+            return "purchase_form";
+        }
 
-        purchaseService.purchaseApartment(userDetails.getUsername(), apartmentId, comment);
-
-        log.debug("Handled confirm purchase form");
+        purchaseService.purchaseApartment(userDetails.getUsername(), apartmentId, purchaseRequestDto.email());
 
         return "redirect:/purchase/my";
     }

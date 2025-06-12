@@ -1,11 +1,15 @@
 package ru.itis.fisd.semestrovka.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.itis.fisd.semestrovka.dto.request.CallbackCreateRequest;
 import ru.itis.fisd.semestrovka.service.CallbackRequestService;
 
 import java.time.LocalDateTime;
@@ -18,14 +22,23 @@ public class CallbackRequestController {
     private final CallbackRequestService callbackRequestService;
 
     @PostMapping("/callback")
-    public ResponseEntity<String> handleCallback(@RequestParam("name") String name,
-                                                 @RequestParam("phone") String phone) {
+    public ResponseEntity<String> handleCallback(@Valid CallbackCreateRequest request,
+                                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMsg = bindingResult.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .reduce((s1, s2) -> s1 + "; " + s2)
+                    .orElse("Invalid input");
+            log.warn("Callback request validation failed: {}", errorMsg);
+            return ResponseEntity.badRequest().body(errorMsg);
+        }
 
-        log.debug("Creating Callback Request with name {} and phone {}", name, phone);
+        log.debug("Creating Callback Request with name {} and phone {}", request.getName(), request.getPhone());
 
-        callbackRequestService.save(name, phone, "NEW", LocalDateTime.now());
+        callbackRequestService.save(request.getName(), request.getPhone(), "NEW", LocalDateTime.now());
 
         log.debug("Callback Request successfully created");
         return ResponseEntity.ok().build();
     }
+
 }

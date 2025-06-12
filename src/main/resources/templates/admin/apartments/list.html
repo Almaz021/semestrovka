@@ -18,6 +18,13 @@
         <p>Квартир пока нет.</p>
     </div>
 
+    <div th:if="${errors != null and !#lists.isEmpty(errors)}" class="validation-errors" style="color:red;">
+        <ul>
+            <li th:each="error : ${errors}" th:text="${error.defaultMessage}">Ошибка</li>
+        </ul>
+    </div>
+
+
     <form method="get" th:action="@{/admin/apartments}">
         <label>Сортировать по:
             <select name="sort">
@@ -79,12 +86,6 @@
            th:href="@{/admin/apartments(page=${currentPage + 1}, size=${size}, sort=${sort}, dir=${dir})}">Вперёд</a>
     </div>
 
-    <style>
-        .current-page {
-            font-weight: bold;
-            text-decoration: underline;
-        }
-    </style>
 </section>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

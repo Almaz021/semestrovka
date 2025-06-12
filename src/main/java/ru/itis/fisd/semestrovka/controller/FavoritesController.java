@@ -1,12 +1,16 @@
 package ru.itis.fisd.semestrovka.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.fisd.semestrovka.dto.request.FavoritesListRequest;
 import ru.itis.fisd.semestrovka.dto.response.PageResponse;
 import ru.itis.fisd.semestrovka.entity.dto.ApartmentDto;
 import ru.itis.fisd.semestrovka.mapper.PageMapper;
@@ -23,12 +27,21 @@ public class FavoritesController {
 
     @GetMapping
     public ResponseEntity<?> getFavorites(@AuthenticationPrincipal UserDetails userDetails,
-                                          @RequestParam(defaultValue = "0") int page,
-                                          @RequestParam(defaultValue = "5") int size) {
+                                          @Valid FavoritesListRequest requestDto,
+                                          BindingResult bindingResult) {
 
         log.info("Getting favorites");
 
-        Page<ApartmentDto> favorites = userService.getFavorites(userDetails.getUsername(), page, size);
+        if (bindingResult.hasErrors()) {
+            String errorMsg = bindingResult.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .reduce((s1, s2) -> s1 + "; " + s2)
+                    .orElse("Invalid input");
+            log.warn("Favorites validation failed: {}", errorMsg);
+            return ResponseEntity.badRequest().body(errorMsg);
+        }
+
+        Page<ApartmentDto> favorites = userService.getFavorites(userDetails.getUsername(), requestDto.getPage(), requestDto.getSize());
 
         log.info("Found {} favorites", favorites.getTotalElements());
 
