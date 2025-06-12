@@ -10,7 +10,11 @@ import ru.itis.fisd.semestrovka.entity.orm.CallbackRequest;
 @Repository
 public interface CallbackRequestRepository extends JpaRepository<CallbackRequest, Long> {
 
-    @Query("SELECT c FROM CallbackRequest c ORDER BY c.status ASC, c.requestedAt DESC")
+    @Query("""
+            SELECT c
+            FROM CallbackRequest c
+            ORDER BY c.status ASC, c.requestedAt DESC
+            """)
     Page<CallbackRequest> findAllByStatusAndDate(Pageable pageable);
 
 

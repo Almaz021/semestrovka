@@ -17,13 +17,18 @@ public interface ViewingRequestRepository extends JpaRepository<ViewingRequest, 
 
     Page<ViewingRequest> findAllByUser(User user, Pageable pageable);
 
-    @Query("SELECT vr FROM ViewingRequest vr WHERE vr.apartment.id = :apartmentId " +
-           "AND vr.preferredDateTime BETWEEN :start AND :end")
+    @Query("""
+            SELECT vr
+            FROM ViewingRequest vr
+            WHERE vr.apartment.id = :apartmentId AND vr.preferredDateTime BETWEEN :start AND :end
+            """)
     List<ViewingRequest> findConflictingRequests(Long apartmentId, LocalDateTime start, LocalDateTime end);
 
-    @Query("SELECT vr FROM ViewingRequest vr " +
-           "WHERE vr.user.id = :userId " +
-           "AND ((vr.preferredDateTime < :end) AND (vr.preferredDateTime + 1 hour > :start))")
+    @Query("""
+            SELECT vr
+            FROM ViewingRequest vr
+            WHERE vr.user.id = :userId AND ((vr.preferredDateTime < :end) AND (vr.preferredDateTime + 1 hour > :start))
+            """)
     List<ViewingRequest> findUserConflicts(@Param("userId") Long userId,
                                            @Param("start") LocalDateTime start,
                                            @Param("end") LocalDateTime end);
