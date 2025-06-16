@@ -4,71 +4,26 @@
     <meta charset="UTF-8">
     <title>Избранные квартиры</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/cards.css}">
 </head>
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<section>
-    <h1>Избранное</h1>
+<main>
+    <section>
+        <h1>Избранное</h1>
 
-    <div id="favorites-container">
-        <p>Загрузка...</p>
-    </div>
-</section>
-
+        <div id="favorites-container">
+            <p>Загрузка...</p>
+        </div>
+    </section>
+</main>
 <div th:replace="~{fragments/footer :: footer}"></div>
 
-<script>
-    async function loadFavorites(page = 0, size = 5) {
-        try {
-            const response = await fetch(`/api/favorites?page=${page}&size=${size}`);
-            if (!response.ok) throw new Error('Ошибка при загрузке избранных квартир');
-
-            const favorites = await response.json();
-            const container = document.getElementById('favorites-container');
-            container.innerHTML = '';
-
-            if (favorites.content.length === 0) {
-                container.innerHTML = '<p>У вас пока нет избранных квартир.</p>';
-                return;
-            }
-
-            favorites.content.forEach(apartment => {
-                const card = document.createElement('div');
-                card.className = 'apartment-card';
-                card.onclick = () => window.location.href = `/apartments/${apartment.id}`;
-                card.innerHTML = `
-                    <h2>${apartment.title}</h2>
-                    <p>${apartment.description}</p>
-                    <p>${apartment.address}</p>
-                    <p>Цена: ${apartment.price} ₽</p>
-                    <p>Комнат: ${apartment.rooms}</p>
-                    <p>Площадь: ${apartment.area} кв.м.</p>
-                    <p>Этаж: ${apartment.floor}</p>
-                `;
-                container.appendChild(card);
-            });
-        } catch (error) {
-            document.getElementById('favorites-container').innerHTML =
-                `<p style="color:red;">${error.message}</p>`;
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        loadFavorites();
-
-        // Если у вас есть header/footer как фрагменты, можно загрузить их так:
-        // fetch('/fragments/header.html').then(r => r.text()).then(html => {
-        //     document.getElementById('header').innerHTML = html;
-        // });
-        //
-        // fetch('/fragments/footer.html').then(r => r.text()).then(html => {
-        //     document.getElementById('footer').innerHTML = html;
-        // });
-    });
-</script>
+<script th:src="@{/js/load-favorites.js}"></script>
 
 </body>
 </html>

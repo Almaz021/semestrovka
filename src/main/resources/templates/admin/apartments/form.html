@@ -2,6 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/apartment-form.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <title th:text="${apartment.id == null ? 'Добавить' : 'Редактировать'} + ' квартиру'">Форма квартиры</title>
 </head>
@@ -103,7 +105,5 @@
 
 
 </section>
-
-<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

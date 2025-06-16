@@ -1,0 +1,85 @@
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fff;
+    color: #111;
+    margin: 0;
+    padding: 0 20px;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 2rem;
+    color: #000;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.status {
+    font-weight: bold;
+}
+
+.mark-done-btn {
+    padding: 6px 12px;
+    border: 1px solid #000;
+    background-color: transparent;
+    color: #000;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.mark-done-btn:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+ul {
+    justify-content: center;
+    margin: 20px 0;
+}
+
+ul li {
+    display: inline;
+}
+
+a {
+    color: #000;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #555;
+}
+
+.current-page {
+    font-weight: bold;
+    text-decoration: none;
+    border-bottom: 2px solid #000;
+}
+
+.validation-errors {
+    margin: 20px auto;
+    max-width: 600px;
+    text-align: left;
+    color: red;
+}

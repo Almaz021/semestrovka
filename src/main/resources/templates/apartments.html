@@ -1,55 +1,58 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
-    <title>Квартиры</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/cards.css}">
+    <title>Квартиры</title>
 </head>
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
-<section>
-    <h1>Список квартир</h1>
+<main>
+    <section>
+        <h1>Список квартир</h1>
 
-    <div th:if="${errors != null and !#lists.isEmpty(errors)}" class="validation-errors" style="color:red;">
-        <ul>
-            <li th:each="error : ${errors}" th:text="${error.defaultMessage}">Ошибка</li>
-        </ul>
-    </div>
-
-    <div class="filter-bar">
-        <form th:action="@{/apartments}" method="get">
-            <label>Мин. цена:
-                <input type="number" name="minPrice" th:value="${minPrice}" />
-            </label>
-            <label>Макс. цена:
-                <input type="number" name="maxPrice" th:value="${maxPrice}" />
-            </label>
-            <label>Сортировка по цене:
-                <select name="sort">
-                    <option value="" th:selected="${sort == null}">Нет</option>
-                    <option th:value="asc" th:selected="${sort == 'asc'}">По возрастанию</option>
-                    <option th:value="desc" th:selected="${sort == 'desc'}">По убыванию</option>
-                </select>
-            </label>
-            <button type="submit">Применить</button>
-        </form>
-    </div>
-
-    <div class="apartments-list">
-        <div th:each="apartment : ${apartments}"
-             class="apartment-card"
-             th:onclick="'window.location.href=\'/apartments/' + ${apartment.id} + '\';'">
-            <h2 th:text="${apartment.title}">Название квартиры</h2>
-            <p th:text="${apartment.address}">Адрес</p>
-            <p>Цена: <span th:text="${apartment.price}">0</span> ₽</p>
-            <p>Комнат: <span th:text="${apartment.rooms}">0</span></p>
-            <p>Площадь: <span th:text="${apartment.area}">0</span> кв.м.</p>
-            <p>Этаж: <span th:text="${apartment.floor}">0</span></p>
+        <div th:if="${errors != null and !#lists.isEmpty(errors)}" class="validation-errors" style="color:red;">
+            <ul>
+                <li th:each="error : ${errors}" th:text="${error.defaultMessage}">Ошибка</li>
+            </ul>
         </div>
-    </div>
 
-    <div class="pagination" style="margin-top: 20px;">
+        <div class="filter-bar">
+            <form th:action="@{/apartments}" method="get">
+                <label>Мин. цена:
+                    <input type="number" name="minPrice" th:value="${minPrice}"/>
+                </label>
+                <label>Макс. цена:
+                    <input type="number" name="maxPrice" th:value="${maxPrice}"/>
+                </label>
+                <label>Сортировка по цене:
+                    <select name="sort">
+                        <option value="" th:selected="${sort == null}">Нет</option>
+                        <option th:value="asc" th:selected="${sort == 'asc'}">По возрастанию</option>
+                        <option th:value="desc" th:selected="${sort == 'desc'}">По убыванию</option>
+                    </select>
+                </label>
+                <button type="submit">Применить</button>
+            </form>
+        </div>
+
+        <div class="apartments-list">
+            <div th:each="apartment : ${apartments}"
+                 class="apartment-card"
+                 th:onclick="'window.location.href=\'/apartments/' + ${apartment.id} + '\';'">
+                <h2 th:text="${apartment.title}">Название квартиры</h2>
+                <p th:text="${apartment.address}">Адрес</p>
+                <p>Цена: <span th:text="${apartment.price}">0</span> ₽</p>
+                <p>Комнат: <span th:text="${apartment.rooms}">0</span></p>
+                <p>Площадь: <span th:text="${apartment.area}">0</span> кв.м.</p>
+                <p>Этаж: <span th:text="${apartment.floor}">0</span></p>
+            </div>
+        </div>
+
+        <div class="pagination" style="margin-top: 20px;">
     <span th:if="${totalPages > 1}">
         <a th:if="${currentPage > 0}"
            th:href="@{/apartments(minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort}, page=${currentPage - 1}, size=10)}">Назад</a>
@@ -64,9 +67,9 @@
         <a th:if="${currentPage < totalPages - 1}"
            th:href="@{/apartments(minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort}, page=${currentPage + 1}, size=10)}">Вперёд</a>
     </span>
-    </div>
-</section>
-
+        </div>
+    </section>
+</main>
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 <script th:src="@{/js/callback-form.js}"></script>

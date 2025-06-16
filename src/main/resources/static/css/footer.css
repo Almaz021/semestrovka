@@ -1,0 +1,43 @@
+#callback-form {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    max-height: 300px;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+#callback-form label {
+    display: block;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+#callback-form input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    margin-top: 5px;
+}
+
+#callback-form button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background-color: gray;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+#callback-form button:hover {
+    background-color: black;
+}

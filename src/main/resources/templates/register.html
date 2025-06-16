@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/form.css}">
     <title>Регистрация</title>
 </head>
 <body>
 
-<!-- вставляем header -->
 <div th:replace="~{fragments/header :: header}"></div>
-<section>
-    <h1>Регистрация</h1>
-    <div th:if="${error}" style="color:red">
-        <p th:text="${error}"></p>
-    </div>
-    <form th:action="@{/register}" method="post">
-        <label>
-            Имя пользователя:
-            <input type="text" name="username"/><br>
-        </label>
-        <label>
-            Пароль:
-            <input type="password" name="password"/><br>
-        </label>
-        <button type="submit">Зарегистрироваться</button>
-    </form>
-</section>
-
-<!-- вставляем footer -->
-<div th:replace="~{fragments/footer :: footer}"></div>
+<div class="auth">
+    <section>
+        <h1>Регистрация</h1>
+        <div th:if="${error}" style="color:red">
+            <p th:text="${error}"></p>
+        </div>
+        <form th:action="@{/register}" method="post">
+            <label>
+                Имя пользователя:
+                <input type="text" name="username"/><br>
+            </label>
+            <label>
+                Пароль:
+                <input type="password" name="password"/><br>
+            </label>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+    </section>
+</div>
 
 <script th:src="@{/js/callback-form.js}"></script>
 </body>

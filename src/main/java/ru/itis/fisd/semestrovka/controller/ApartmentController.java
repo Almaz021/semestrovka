@@ -71,8 +71,12 @@ public class ApartmentController {
         ApartmentDto apartment = apartmentService.findDtoByIdAvailable(id);
         model.addAttribute("apartment", apartment);
 
-        boolean isFavorite = userService.isApartmentFavoriteForUser(userDetails, apartment);
-        model.addAttribute("isFavorite", isFavorite);
+        if (userDetails != null) {
+            boolean isFavorite = userService.isApartmentFavoriteForUser(userDetails, apartment);
+            model.addAttribute("isFavorite", isFavorite);
+        } else {
+            model.addAttribute("isFavorite", false);
+        }
 
         log.debug("Show apartment page");
         return "apartment";

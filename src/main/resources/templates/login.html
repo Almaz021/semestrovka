@@ -1,39 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/form.css}">
     <title>Вход в систему</title>
 </head>
 <body>
 
-<!-- вставляем header -->
 <div th:replace="~{fragments/header :: header}"></div>
-<section>
-    <h2>Вход в систему</h2>
-    <form th:action="@{/usercheck}" method="post">
-        <label>
-            Имя пользователя:
-            <input type="text" name="username"/><br>
-        </label>
-        <label>
-            Пароль:
-            <input type="password" name="password"/><br/>
-        </label>
+<div class="auth">
+    <section>
+        <h2>Вход в систему</h2>
+        <form th:action="@{/usercheck}" method="post">
+            <label>
+                Имя пользователя:
+                <input type="text" name="username"/><br>
+            </label>
+            <label>
+                Пароль:
+                <input type="password" name="password"/><br/>
+            </label>
 
-        <button type="submit">Войти</button>
+            <button type="submit">Войти</button>
 
-        <div th:if="${param.error}">
-            <p style="color:red">Неправильное имя пользователя или пароль</p>
-        </div>
-        <div th:if="${param.logout}">
-            <p style="color:green">Выполнен выход из аккаунта</p>
-        </div>
-    </form>
+            <div th:if="${param.error}">
+                <p style="color:red">Неправильное имя пользователя или пароль</p>
+            </div>
+            <div th:if="${param.logout}">
+                <p style="color:green">Выполнен выход из аккаунта</p>
+            </div>
+        </form>
 
-</section>
+    </section>
+</div>
 
-<!-- вставляем footer -->
-<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script th:src="@{/js/callback-form.js}"></script>
 </body>

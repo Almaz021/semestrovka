@@ -3,32 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/viewing_request_form.css}">
     <title>Запись на просмотр</title>
 </head>
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
+<main>
+    <section>
+        <h2>Запись на просмотр квартиры: <span th:text="${apartment.title}">Квартира</span></h2>
 
-<section>
-    <h2>Запись на просмотр квартиры: <span th:text="${apartment.title}">Квартира</span></h2>
+        <form th:action="@{'/appointments/' + ${apartment.id}}" method="post">
+            <label for="datetime">Выберите дату и время:</label>
+            <select id="datetime" name="preferredDateTime" required>
+                <option th:each="slot : ${availableSlots}"
+                        th:value="${slot}"
+                        th:text="${#temporals.format(slot, 'dd.MM.yyyy HH:mm')}">
+                </option>
+            </select>
 
-    <form th:action="@{'/appointments/' + ${apartment.id}}" method="post">
-        <label for="datetime">Выберите дату и время:</label>
-        <select id="datetime" name="preferredDateTime" required>
-            <option th:each="slot : ${availableSlots}"
-                    th:value="${slot}"
-                    th:text="${#temporals.format(slot, 'dd.MM.yyyy HH:mm')}">
-            </option>
-        </select>
+            <br/><br/>
+            <button type="submit">Отправить заявку</button>
+        </form>
 
-        <br/><br/>
-        <button type="submit">Отправить заявку</button>
-    </form>
-
-</section>
-
-<div th:if="${error}" style="color:red">
-    <p th:text="${error}"></p>
+    </section>
+</main>
+<div th:if="${errors != null and !#lists.isEmpty(errors)}" class="validation-errors" style="color:red;">
+    <ul>
+        <li th:each="error : ${errors}" th:text="${error.defaultMessage}">Ошибка</li>
+    </ul>
 </div>
 
 

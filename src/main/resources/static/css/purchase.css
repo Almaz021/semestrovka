@@ -1,0 +1,58 @@
+.purchase-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.purchase-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+.purchase-container p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.purchase-container form {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.purchase-container label {
+    font-weight: bold;
+}
+
+.purchase-container input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fafafa;
+}
+
+.purchase-container button {
+    padding: 10px;
+    font-size: 16px;
+    color: white;
+    background-color: gray;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.purchase-container button:hover {
+    background-color: #333;
+}
+
+.purchase-container .error {
+    color: red;
+    font-size: 14px;
+}

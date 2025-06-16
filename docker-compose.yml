@@ -31,6 +31,17 @@ services:
     networks:
       - backend
 
+  email-service:
+    build:
+      context: ../email-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    networks:
+      - backend
+    depends_on:
+      - postgresql
+
 volumes:
   postgresql_data:
 

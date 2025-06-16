@@ -15,6 +15,6 @@ public class CallbackCreateRequest {
     private String name;
 
     @NotBlank(message = "Телефон обязателен")
-    @Pattern(regexp = "\\+?\\d{10,15}", message = "Неверный формат телефона")
+    @Pattern(regexp = "^\\+7\\d{10}$", message = "Номер должен быть в формате +7XXXXXXXXXX")
     private String phone;
 }

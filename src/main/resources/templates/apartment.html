@@ -3,6 +3,9 @@
 <head>
     <title th:text="${apartment.title}">Квартира</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/card.css}">
 
 </head>
 
@@ -10,35 +13,36 @@
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
-<section>
-    <h1 th:text="${apartment.title}">Название квартиры</h1>
+<main>
+    <section>
+        <h1 th:text="${apartment.title}">Название квартиры</h1>
 
-    <div class="apartment-detail">
-        <p><strong>Описание:</strong> <span th:text="${apartment.description}">0</span></p>
-        <p><strong>Адрес:</strong> <span th:text="${apartment.address}">Адрес</span></p>
-        <p><strong>Цена:</strong> <span th:text="${apartment.price}">0</span> ₽</p>
-        <p><strong>Комнат:</strong> <span th:text="${apartment.rooms}">0</span></p>
-        <p><strong>Площадь:</strong> <span th:text="${apartment.area}">0</span> кв.м.</p>
-        <p><strong>Этаж:</strong> <span th:text="${apartment.floor}">0</span></p>
+        <div class="apartment-detail">
+            <p><strong>Описание:</strong> <span th:text="${apartment.description}">0</span></p>
+            <p><strong>Адрес:</strong> <span th:text="${apartment.address}">Адрес</span></p>
+            <p><strong>Цена:</strong> <span th:text="${apartment.price}">0</span> ₽</p>
+            <p><strong>Комнат:</strong> <span th:text="${apartment.rooms}">0</span></p>
+            <p><strong>Площадь:</strong> <span th:text="${apartment.area}">0</span> кв.м.</p>
+            <p><strong>Этаж:</strong> <span th:text="${apartment.floor}">0</span></p>
 
-        <div class="buttons" th:if="${apartment.status == 'AVAILABLE'}">
-            <form th:action="@{'/appointments/' + ${apartment.id}}" method="get">
-                <button type="submit">Записаться на просмотр</button>
-            </form>
-            <form th:action="@{'/purchase/' + ${apartment.id}}" method="get">
-                <button type="submit">Купить</button>
-            </form>
-            <button id="favorite-button"
-                    th:data-id="${apartment.id}"
-                    th:data-is-favorite="${isFavorite}"
-                    th:text="${isFavorite} ? 'Удалить из избранного' : 'Добавить в избранное'">
-            </button>
+            <div class="buttons" th:if="${apartment.status == 'AVAILABLE'}">
+                <form th:action="@{'/appointments/' + ${apartment.id}}" method="get">
+                    <button type="submit">Записаться на просмотр</button>
+                </form>
+                <form th:action="@{'/purchase/' + ${apartment.id}}" method="get">
+                    <button type="submit">Купить</button>
+                </form>
+                <button id="favorite-button"
+                        th:data-id="${apartment.id}"
+                        th:data-is-favorite="${isFavorite}"
+                        th:text="${isFavorite} ? 'Удалить из избранного' : 'Добавить в избранное'">
+                </button>
+
+            </div>
 
         </div>
-
-    </div>
-</section>
-
+    </section>
+</main>
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 <script th:src="@{/js/favorites.js}"></script>

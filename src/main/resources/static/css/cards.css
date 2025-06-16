@@ -1,0 +1,39 @@
+.apartments-list, #favorites-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.apartment-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    transition: box-shadow 0.3s, transform 0.2s;
+    cursor: pointer;
+}
+
+.apartment-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
+}
+
+.apartment-card h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #111;
+}
+
+.apartment-card p {
+    margin: 6px 0;
+    color: #333;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.current-page {
+    font-weight: bold;
+    text-decoration: underline;
+    color: black;
+}

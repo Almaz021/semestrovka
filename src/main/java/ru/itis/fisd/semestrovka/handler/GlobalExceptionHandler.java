@@ -14,10 +14,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             ApartmentAlreadySoldException.class,
-            ApartmentNotFoundException.class,
             CallbackRequestNotFoundException.class,
-            PurchaseNotFoundException.class,
-            UserNotFoundException.class,
             ViewingTimeConflictException.class,
             ViewingTimeOutOfBoundsException.class
     })
@@ -41,7 +38,10 @@ public class GlobalExceptionHandler {
         return new ModelAndView("error/403");
     }
 
-    @ExceptionHandler(NoResourceFoundException.class)
+    @ExceptionHandler({NoResourceFoundException.class,
+            ApartmentNotFoundException.class,
+            PurchaseNotFoundException.class,
+            UserNotFoundException.class,})
     public ModelAndView handleNoResourceFoundException() {
         return new ModelAndView("error/404");
     }

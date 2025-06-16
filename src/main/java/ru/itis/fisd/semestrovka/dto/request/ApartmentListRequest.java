@@ -11,7 +11,7 @@ import lombok.Setter;
 public class ApartmentListRequest {
 
     @Min(value = 0, message = "Страница не меньше 0")
-    private int page = 1;
+    private int page = 0;
 
     @Min(value = 1, message = "Размер страницы должен быть не меньше 1")
     @Max(value = 100, message = "Размер страницы не должен превышать 100")

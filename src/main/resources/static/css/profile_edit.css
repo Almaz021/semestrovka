@@ -1,0 +1,88 @@
+/* Редактирование профиля - чёрно-белый стиль */
+
+main section {
+    max-width: 400px;
+    margin: 40px auto;
+    background: #fff;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 30px 25px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #222;
+}
+
+main section h1 {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: #000;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #000;
+}
+
+form input[type="text"],
+form input[type="password"] {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 5px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #000;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+form input[type="text"]:focus,
+form input[type="password"]:focus {
+    outline: none;
+    border-color: #000;
+    box-shadow: 0 0 4px #000;
+}
+
+form button {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    margin-top: 20px;
+    background: none;
+    border: 2px solid #000;
+    border-radius: 5px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: #000;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+form button:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+main section a {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #000;
+    font-weight: 600;
+    text-decoration: none;
+    border: 2px solid #000;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+main section a:hover {
+    background-color: #000;
+    color: #fff;
+}

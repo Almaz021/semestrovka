@@ -2,33 +2,33 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="ru">
 <head>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
     <title>Профиль</title>
 </head>
 <body>
 
-<!-- вставляем header -->
 <div th:replace="~{fragments/header :: header}"></div>
-<section>
-    <h1>Профиль</h1>
-    <p>Вошли как: <span sec:authentication="name">Пользователь</span></p>
+<main>
+    <section>
+        <h1>Профиль</h1>
+        <p>Вошли как: <span sec:authentication="name">Пользователь</span></p>
 
-    <div>
-        <a th:href="@{/profile/edit}">Редактировать</a>
-    </div>
+        <div>
+            <a th:href="@{/profile/edit}">Редактировать</a>
+        </div>
 
-    <div>
-        <a th:href="@{/purchase/my}">
-            <button type="button">Мои квартиры</button>
-        </a>
-    </div>
+        <div>
+            <a th:href="@{/purchase/my}">Мои квартиры</a>
+        </div>
 
-    <form th:action="@{/logout}" method="post">
-        <button type="submit">Выйти</button>
-    </form>
-</section>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Выйти</button>
+        </form>
+    </section>
+</main>
 
-
-<!-- вставляем footer -->
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 <script th:src="@{/js/callback-form.js}"></script>

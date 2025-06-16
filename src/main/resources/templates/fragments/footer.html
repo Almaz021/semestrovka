@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <body>
-<div th:fragment="footer">
+<div th:fragment="footer" class="footer-wrapper">
     <hr/>
     <form id="callback-form" th:action="@{/callback}" method="post">
         <label>Имя: <input type="text" name="name" required/></label>
-        <label>Телефон: <input type="tel" name="phone" required/></label>
+        <label>Телефон:
+            <input type="tel" name="phone" required
+                   pattern="^\+7\d{10}$"
+                   title="Введите номер в формате +7XXXXXXXXXX"/>
+        </label>
+
         <button type="submit">Обратный звонок</button>
     </form>
     <p id="callback-message" style="color: green; display: none;"></p>
     <p id="callback-error" style="color: red; display: none;"></p>
-
-    <p>&copy; 2025 Semestrovka</p>
 </div>
 </body>
 </html>
